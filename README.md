@@ -14,7 +14,15 @@ and provides appropriate `@propertyWrapper` implementations for retrieving objec
 Stitch provides the following key functionality:
 1. Embedded in the SwiftUI lifecycle, with SwiftUI ergonomics (use it just how you would use other SwiftUI property wrappers)
 2. Protocol DI within SwiftUI views (Extending ObservableObject to work with protocol types and trigger view updates) See: [StitchObservable](#using-stitchobservable)
-3. Combine publisher access to protocol type properties (without having to annotate your protocol with Publisher<Object,Never> vars and forward in your object) See: [StichPublished](#using-stitchpublished)
+3. Combine publisher access to protocol type properties (without having to annotate your protocol with Publisher<Object,Never> vars and forward in your object) See: [StitchPublished](#using-stitchpublished)
+
+* [Stitch in a pinch](#stitch-in-a-pinch)
+* [Get stitching](#get-stitching)
+* [Examples](#examples)
+* [Advanced stitching](#advanced-stitching)
+    * [@StitchObservable](#using-stitchobservable)
+    * [@StitchPublished](#using-stitchpublished)
+* [Community](#community)
 
 ## Stitch in a pinch
 Using Stitch in your application is straightforward and aims to provide rich functionality with minimal boilerplate or code generation. Stitch achieves its compile time safety through the use of the DependencyMap which encapsulates all dependencies for resolution.
@@ -78,6 +86,14 @@ targets: [
     ),
 ],
 ```
+
+## Examples 
+Included in the Stitch repo is an example project that demonstrates setting up and using Stitch. It covers:
+
+* [Setup](https://github.com/entrhq/stitch/tree/main/Examples/Stitched/Stitched/00-Setup)
+* [Getting started](https://github.com/entrhq/stitch/tree/main/Examples/Stitched/Stitched/01-GettingStarted)
+* [Mocking previews](https://github.com/entrhq/stitch/tree/main/Examples/Stitched/Stitched/02-MockingPreviews)
+* [Stitch Published](https://github.com/entrhq/stitch/tree/main/Examples/Stitched/Stitched/03-StitchPublished)
 
 ## Advanced stitching
 - [StitchObservable](#using-stitchobservable)
