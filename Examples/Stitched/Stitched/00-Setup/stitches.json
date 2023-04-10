@@ -1,0 +1,26 @@
+[
+    {
+        "id": "12345",
+        "name": "Straight stitch",
+        "difficulty": "easy",
+        "usecase": "Best for basic sewing"
+    },
+    {
+        "id": "12346",
+        "name": "Zig zag stitch",
+        "difficulty": "easy",
+        "usecase": "Best for stretch fabric"
+    },
+    {
+        "id": "12347",
+        "name": "Overlock stitch",
+        "difficulty": "medium",
+        "usecase": "Best for hems"
+    },
+    {
+        "id": "12348",
+        "name": "Blind hem stitch",
+        "difficulty": "hard",
+        "usecase": "Best for tidy finishes"
+    }
+]

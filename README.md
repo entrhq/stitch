@@ -1,3 +1,4 @@
+# ![](Images/StitchLogo.png)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Compatibility](https://img.shields.io/badge/Swift%20compatibility-5.7%2B-green)]() [![Compatibility](https://img.shields.io/badge/iOS-13%2B-orange)]() [![Compatibility](https://img.shields.io/badge/Mac%20OS-10.15%2B-orange)]()
 
 # Stitch
@@ -9,6 +10,11 @@ No run time failures akin to typical dependency container implementations whenev
 
 Stitch models its dependency map after the SwiftUI `EnvironmentValues` structure, 
 and provides appropriate `@propertyWrapper` implementations for retrieving objects from the map. 
+
+Stitch provides the following key functionality:
+1. Embedded in the SwiftUI lifecycle, with SwiftUI ergonomics (use it just how you would use other SwiftUI property wrappers)
+2. Protocol DI within SwiftUI views (Extending ObservableObject to work with protocol types and trigger view updates) See: [StitchObservable](#using-stitchobservable)
+3. Combine publisher access to protocol type properties (without having to annotate your protocol with Publisher<Object,Never> vars and forward in your object) See: [StichPublished](#using-stitchpublished)
 
 ## Stitch in a pinch
 Using Stitch in your application is straightforward and aims to provide rich functionality with minimal boilerplate or code generation. Stitch achieves its compile time safety through the use of the DependencyMap which encapsulates all dependencies for resolution.
@@ -74,10 +80,10 @@ targets: [
 ```
 
 ## Advanced stitching
-- [StitchObservable](#using-@stitchobservable)
-- [StichPublished](#using-@stitchpublished)
+- [StitchObservable](#using-stitchobservable)
+- [StichPublished](#using-stitchpublished)
 
-##### Using @StitchObservable
+#### Using StitchObservable
 Stitch aims to provide flexible use of dependencies within the SwiftUI environment extending the traditional SwiftUI implementations with further functionality. Out of the box, SwiftUI provides both `ObservableObject` and the `@ObservedObject` property wrapper, allowing developers to push state into its own object to manage its lifecycle. This works well when using concrete dependencies in your views:
 
 ```swift
@@ -199,7 +205,7 @@ struct HomeView_Previews: PreviewProvider, DependencyMocker {
 ```
 Our model can now be easily mocked, without providing irrelevant / hard to create dependencies from within the preview scope. 
 
-##### Using @StitchPublished
+#### Using StitchPublished
 Stitch extends the functionality of `@Published` properties inside protocol types, and provides the same Publisher behaviour for these properties to external consumers. Normally, one can access the `Publisher` of the property inside of a concrete class, but as discussed above, when hiding implementation detail and enabling IOC / DI, we lose this functionality. Our protocol definitions did not allude to our properties being annotated with `@Published` and no longer allow consumers to subscribe to these publishers.
 
 This is where Stitch introduces the `@StitchPublished` property wrapper. Similar to the above `@StitchObservable`, this property wrapper wraps our protocol type and forwards publish events to the consumer of the property wrapper. However, StitchPublished gives consumers access outside of a view scope, providing them with subscribers on properties inside of the protocol. 

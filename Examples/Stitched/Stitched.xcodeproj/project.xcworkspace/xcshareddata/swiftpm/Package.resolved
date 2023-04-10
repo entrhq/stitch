@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "stitch",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/entrhq/stitch",
+      "state" : {
+        "branch" : "main",
+        "revision" : "f33e0e21b0769e024a042f717125e39a4f5d441f"
+      }
+    }
+  ],
+  "version" : 2
+}
