@@ -9,7 +9,7 @@ enum StitchifyError: Error {
     case invalidScope
 }
 
-public struct StitchifyMacro: MemberMacro, ExtensionMacro {
+public struct StitchifyMacro: MemberMacro, ExtensionMacro, PeerMacro {
     public static func expansion(
         of node: AttributeSyntax,
         providingMembersOf declaration: some DeclGroupSyntax,
@@ -29,8 +29,9 @@ public struct StitchifyMacro: MemberMacro, ExtensionMacro {
         
         let scope: DeclSyntax = "static var scope: StitchableScope = \(raw: scoped)"
         let dependency: DeclSyntax = "static var dependency: \(raw: key) = \(name)()"
+        let initDecl: DeclSyntax = "required init() {}"
         
-        return [scope, dependency]
+        return [scope, dependency, initDecl]
     }
     
     public static func expansion(
@@ -40,12 +41,29 @@ public struct StitchifyMacro: MemberMacro, ExtensionMacro {
         conformingTo protocols: [TypeSyntax],
         in context: some MacroExpansionContext
     ) throws -> [ExtensionDeclSyntax] {
-        var base = [try ExtensionDeclSyntax("extension SomeStruct: Stitchable {  }")]
+        guard let declared = declaration.asProtocol(NamedDeclSyntax.self) else { return [] }
+        let name = declared.name
+        
+        var base = [try ExtensionDeclSyntax("extension \(name): Stitchable {  }")]
         guard case let .argumentList(arguments) = node.arguments else { return base }
 //        // Extract our key if provided and strip .self, otherwise default to declared name
 //        let typeExpression = arguments.first { $0.label?.text == "by" }?.expression
 //        let type = typeExpression?.description.replacingOccurrences(of: ".self", with: "")
 //        if type != "nil" && type != nil { base.append(try ExtensionDeclSyntax("extension SomeStruct: \(raw: type!) {  }")) }
         return base
+    }
+    
+    public static func expansion(
+        of node: SwiftSyntax.AttributeSyntax,
+        providingPeersOf declaration: some SwiftSyntax.DeclSyntaxProtocol,
+        in context: some SwiftSyntaxMacros.MacroExpansionContext
+    ) throws -> [DeclSyntax] {
+        [
+            """
+            struct MyKey {
+                static var dependency: any SomeProtocol { SomeStruct.resolve() }
+            }
+            """
+        ]
     }
 }

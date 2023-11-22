@@ -26,7 +26,7 @@ public struct Stitch<Dependency>: DependencyLifecycleScope {
 }
 
 @propertyWrapper
-public struct Inject<Dependency: Stitchable>: DependencyLifecycleScope {
+public struct Stitched<Dependency: Stitchable>: DependencyLifecycleScope {
     private let stitchedType: (Dependency).Type
     public var wrappedValue: Dependency.Dependency {
         get { stitchedType.resolve() }

@@ -8,6 +8,7 @@
 import Stitch
 import Combine
 
+@Stitchify(by: SewingStoring.self)
 class SewingStore: SewingStoring {
     @Stitch(\.repository) private var repository
     

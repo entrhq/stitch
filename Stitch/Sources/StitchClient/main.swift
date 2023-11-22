@@ -11,16 +11,8 @@ protocol SomeProtocol {
     var property: String { get set }
 }
 
-protocol DependencyContainer: DependencyLifecycleScope {
-    associatedtype Dependency
-    var value: Dependency { get set }
-}
-
-@Bind(by: SomeProtocol.self)
-struct Some: DependencyContainer {}
-
 // MARK: NEW
-@Stitchify(by: SomeProtocol.self)
+@Stitchify
 struct SomeStruct: SomeProtocol {
     var uuid = UUID()
     var property: String = "hello"
@@ -30,7 +22,7 @@ struct SomeStruct: SomeProtocol {
 // MARK: OLD
 struct OtherSomeStruct: SomeProtocol {
     var uuid = UUID()
-    var property: String = "hello"
+    var property: String = "hello other"
     var otherProperty: String = "not visible by protocol"
 }
 
@@ -47,8 +39,9 @@ extension DependencyMap {
 
 // MARK: IMPL
 struct SomeClass {
-    @Inject(SomeStruct.self) var new
+    @Stitched(SomeStruct.self) var new
     @Stitch(\.otherStruct) var old
+    @Stitch(\.otherStruct) var otherNew
 //    @Stitch(\Some) var old
     
     func doSomething() {

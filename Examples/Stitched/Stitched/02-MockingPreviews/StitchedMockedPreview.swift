@@ -24,7 +24,7 @@ struct StitchedMockedPreview: PreviewProvider, DependencyMocker {
     }
     
     static var previews: some View {
-        mockInViewScope(\.store, mock: MockSewingStore())
+//        mockInViewScope(\.store, mock: MockSewingStore())
         StitchedView()
     }
 }

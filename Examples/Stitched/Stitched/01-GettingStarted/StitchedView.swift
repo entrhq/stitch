@@ -9,7 +9,7 @@ import Stitch
 import SwiftUI
 
 struct StitchedView: View {
-    @StitchObservable(\.store) var store
+    @StitchedObservable(SewingStore.self) var store
     
     var body: some View {
         List {

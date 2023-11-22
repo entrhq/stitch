@@ -73,3 +73,63 @@ public struct StitchObservable<Dependency>: DynamicProperty, DependencyLifecycle
         }
     }
 }
+
+@propertyWrapper
+public struct StitchedObservable<Dependency: Stitchable>: DynamicProperty, DependencyLifecycleScope {
+
+    @dynamicMemberLookup
+    public struct Wrapper {
+        private var wrapped: StitchedObservable
+        
+        internal init(_ wrap: StitchedObservable<Dependency>) {
+            self.wrapped = wrap
+        }
+        
+        public subscript<Subject>(
+            dynamicMember keyPath: ReferenceWritableKeyPath<Dependency.Dependency, Subject>
+        ) -> Binding<Subject> {
+            Binding(
+                get: { self.wrapped.wrappedValue[keyPath: keyPath] },
+                set: { self.wrapped.wrappedValue[keyPath: keyPath] = $0 }
+            )
+        }
+    }
+    
+    private let stitchedType: (Dependency).Type
+    public var wrappedValue: Dependency.Dependency {
+        get { stitchedType.resolve() }
+        set {
+            stitchedType.register(dependency: newValue)
+            observe()
+        }
+    }
+    
+    @ObservedObject internal var observableObject = ErasedObservableObject()
+    
+    /// Projected value
+    ///
+    /// The projected value provides a `$` binding accessor to the calling site, much like `ObservableObject`
+    /// or `StateObject` and produces a binding for SwiftUI view heirarchy to observe changes on.
+    public var projectedValue: Wrapper {
+        Wrapper(self)
+    }
+    
+    public init(_ type: (Dependency).Type) {
+        self.stitchedType = type
+        observe()
+    }
+    
+    private mutating func observe() {
+        let observable = wrappedValue as? AnyObservableObject
+        
+        precondition(observable != nil, "Cannot observe an object that does not confrom to 'AnyObservableObject'")
+        
+        // Unwrapping safely to avoid force!
+        // Should never get here if observable is nil due to precondition
+        if let observable {
+            self.observableObject = .init(
+                changePublisher: observable.objectWillChange.eraseToAnyPublisher()
+            )
+        }
+    }
+}

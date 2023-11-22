@@ -9,7 +9,7 @@ import Stitch
 import SwiftUI
 
 struct StitchedWithAlert: View {
-    @StitchObservable(\.store) var store
+    @StitchedObservable(SewingStore.self) var store
     @StitchObservable(\.alertStore) var alertStore
     
     var body: some View {

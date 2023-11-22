@@ -13,14 +13,3 @@ protocol SewingStoring: ObservableObject, AnyObservableObject {
     func fetchStitches() async
     func addStitch()
 }
-
-extension DependencyMap {
-    private struct SewingStoreKey: DependencyKey {
-        static var dependency: any SewingStoring = SewingStore()
-    }
-    
-    var store: any SewingStoring {
-        get { resolve(key: SewingStoreKey.self) }
-        set { register(key: SewingStoreKey.self, dependency: newValue) }
-    }
-}
