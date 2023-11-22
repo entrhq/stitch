@@ -29,7 +29,6 @@ public struct StitchifyMacro: MemberMacro, ExtensionMacro, PeerMacro {
         
         let scope: DeclSyntax = "static var scope: StitchableScope = \(raw: scoped)"
         let dependency: DeclSyntax = "static var dependency: \(raw: key) = \(name)()"
-        let initDecl: DeclSyntax = "required init() {}"
         
         return [scope, dependency, initDecl]
     }
