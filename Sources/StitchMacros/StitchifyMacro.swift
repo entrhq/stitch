@@ -30,7 +30,7 @@ public struct StitchifyMacro: MemberMacro, ExtensionMacro, PeerMacro {
         let scope: DeclSyntax = "static var scope: StitchableScope = \(raw: scoped)"
         let dependency: DeclSyntax = "static var dependency: \(raw: key) = \(name)()"
         
-        return [scope, dependency, initDecl]
+        return [scope, dependency]
     }
     
     public static func expansion(
