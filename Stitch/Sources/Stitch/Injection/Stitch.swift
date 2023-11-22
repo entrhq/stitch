@@ -24,3 +24,16 @@ public struct Stitch<Dependency>: DependencyLifecycleScope {
         self.keyPath = keyPath
     }
 }
+
+@propertyWrapper
+public struct Inject<Dependency: Stitchable>: DependencyLifecycleScope {
+    private let stitchedType: (Dependency).Type
+    public var wrappedValue: Dependency.Dependency {
+        get { stitchedType.resolve() }
+        set { stitchedType.register(dependency: newValue) }
+    }
+    
+    public init(_ type: (Dependency).Type) {
+        self.stitchedType = type
+    }
+}

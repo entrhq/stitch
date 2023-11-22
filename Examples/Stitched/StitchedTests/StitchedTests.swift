@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import Stitched
+@testable import Stitch
 
 final class StitchedTests: XCTestCase {
 
