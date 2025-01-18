@@ -11,7 +11,7 @@ import SwiftUI
 struct StitchedApp: App {
     var body: some Scene {
         WindowGroup {
-            StitchedView()
+            StitchedWithAlert()
         }
     }
 }

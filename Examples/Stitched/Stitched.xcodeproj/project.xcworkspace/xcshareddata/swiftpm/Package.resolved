@@ -1,14 +1,24 @@
 {
+  "originHash" : "3a670df3709801d4886cb080e29e3b5dc269debf63befe6d3c72f7c41f0d2b43",
   "pins" : [
     {
       "identity" : "stitch",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/entrhq/stitch",
       "state" : {
-        "branch" : "main",
-        "revision" : "f33e0e21b0769e024a042f717125e39a4f5d441f"
+        "branch" : "feature/5.9-macros",
+        "revision" : "48e1412ffef13cb139f42f2de6e40e5400469731"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-syntax.git",
+      "state" : {
+        "revision" : "0687f71944021d616d34d922343dcef086855920",
+        "version" : "600.0.1"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

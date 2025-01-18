@@ -8,7 +8,7 @@
 import Stitch
 import SwiftUI
 
-struct StitchedMockedPreview: PreviewProvider, DependencyMocker {
+struct StitchedMockedPreview: PreviewProvider {
     class MockSewingStore: SewingStoring {
         @Published var stitches: [SewingStitch] =
             [

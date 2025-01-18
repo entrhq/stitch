@@ -10,17 +10,14 @@ import Combine
 
 @Stitchify(by: SewingStoring.self)
 class SewingStore: SewingStoring {
-    @Stitch(\.repository) private var repository
-    
+    @Stitched(SewingRepository.self) private var repository
     @Published var stitches: [SewingStitch] = []
     
-    @MainActor
     func fetchStitches() async {
         guard let stitches = try? await repository.fetchStitches() else { return }
         self.stitches = stitches
     }
     
-    @MainActor
     func addStitch() {
         stitches.append(
             SewingStitch(
@@ -30,4 +27,6 @@ class SewingStore: SewingStoring {
             )
         )
     }
+    
+    required init() {}
 }

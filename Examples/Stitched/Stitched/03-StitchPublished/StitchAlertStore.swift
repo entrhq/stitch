@@ -9,6 +9,7 @@ import Stitch
 import Combine
 import SwiftUI
 
+@Stitchify
 class StitchAlertStore: StitchAlertStoring {
 //    @StitchPublished(\.store) var store
     private var cancellable: AnyCancellable?
@@ -20,7 +21,7 @@ class StitchAlertStore: StitchAlertStoring {
         }
     }
     
-    init() {
+    required init() {
 //        cancellable = $store.stitches
 //            .map { $0.last }
 //            .sink { [weak self] stitch in
