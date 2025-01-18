@@ -1,54 +1,46 @@
 import Stitch
 import Foundation
 
-
-var value = SomeStruct.resolve()
-print("\(value.uuid): \(value.property)")
-
 // MARK: SAME
+@MainActor
 protocol SomeProtocol {
     var uuid: UUID { get }
     var property: String { get set }
 }
 
-// MARK: NEW
-@Stitchify
-struct SomeStruct: SomeProtocol {
+@Stitchify(by: SomeProtocol.self, scoped: .unique)
+class SomeStore: SomeProtocol {
+    required init() {}
     var uuid = UUID()
     var property: String = "hello"
     var otherProperty: String = "not visible by protocol"
 }
 
-// MARK: OLD
-struct OtherSomeStruct: SomeProtocol {
-    var uuid = UUID()
-    var property: String = "hello other"
-    var otherProperty: String = "not visible by protocol"
-}
-
-extension DependencyMap {
-    private struct OtherSomeStructKey: DependencyKey {
-        static var dependency: any SomeProtocol = OtherSomeStruct()
-    }
-    
-    var otherStruct: any SomeProtocol {
-        get { resolve(key: OtherSomeStructKey.self) }
-        set { register(key: OtherSomeStructKey.self, dependency: newValue) }
-    }
-}
+typealias SomeStoreType = SomeStore
 
 // MARK: IMPL
+@MainActor
 struct SomeClass {
-    @Stitched(SomeStruct.self) var new
-    @Stitch(\.otherStruct) var old
-    @Stitch(\.otherStruct) var otherNew
-//    @Stitch(\Some) var old
+    @Stitched(SomeStore.self) var new
+    @StitchedObservable(SomeStore.self) var newObservable
     
     func doSomething() {
-        print("\(old.uuid): \(old.property)")
-        print("\(new.uuid): \(new.property)")
+        print(new.property)
+        print(newObservable.uuid)
     }
 }
 
+@MainActor
+struct AnotherClass {
+    @Stitched(SomeStoreType.self) var new
+    @StitchedObservable(SomeStore.self) var newObservable
+    
+    func doSomething() {
+        print(new.property)
+        print(newObservable.uuid)
+    }
+}
 
+// these class id's will be different because our injection was set to unique.
 SomeClass().doSomething()
+AnotherClass().doSomething()

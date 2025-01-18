@@ -15,7 +15,6 @@
 /// - Parameters:
 ///   - type: Optional type to be stitched by. When not provided, the type will be stitched against its concrete type.
 ///   - scoped: The scope of the stitchable representation. Defaults to `.application`.
-@attached(member, names: named(scope), named(dependency), named(init))
+@attached(member, names: named(scope), named(dependency), named(init), named(createNewInstance))
 @attached(extension, conformances: Stitchable)
-//@attached(peer, names: prefixed(My), suffixed(Key))
 public macro Stitchify(by: Any.Type? = nil, scoped: StitchableScope = .application) = #externalMacro(module: "StitchMacros", type: "StitchifyMacro")

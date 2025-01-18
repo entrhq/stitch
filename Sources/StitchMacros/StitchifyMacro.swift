@@ -9,7 +9,7 @@ enum StitchifyError: Error {
     case invalidScope
 }
 
-public struct StitchifyMacro: MemberMacro, ExtensionMacro, PeerMacro {
+public struct StitchifyMacro: MemberMacro, ExtensionMacro {
     public static func expansion(
         of node: AttributeSyntax,
         providingMembersOf declaration: some DeclGroupSyntax,
@@ -27,12 +27,15 @@ public struct StitchifyMacro: MemberMacro, ExtensionMacro, PeerMacro {
         let key = "\(keyExpression != nil ? "any \(keyExpression!)" : name)".replacingOccurrences(of: ".self", with: "")
         let scoped = arguments?.first { $0.label?.text == "scoped" }?.expression ?? ".application"
         
+        // add our dependency management properties and functionality
         let scope: DeclSyntax = "static var scope: StitchableScope = \(raw: scoped)"
-        let dependency: DeclSyntax = "static var dependency: \(raw: key) = \(name)()"
+        let dependency: DeclSyntax = "static var dependency: \(raw: key) = createNewInstance()"
+        let new: DeclSyntax = "static func createNewInstance() -> \(raw: key) { \(name)() }"
         
-        return [scope, dependency]
+        return [scope, dependency, new]
     }
     
+    // stitchable protocol conformance
     public static func expansion(
         of node: AttributeSyntax,
         attachedTo declaration: some DeclGroupSyntax,
@@ -43,26 +46,9 @@ public struct StitchifyMacro: MemberMacro, ExtensionMacro, PeerMacro {
         guard let declared = declaration.asProtocol(NamedDeclSyntax.self) else { return [] }
         let name = declared.name
         
-        var base = [try ExtensionDeclSyntax("extension \(name): Stitchable {  }")]
-        guard case let .argumentList(arguments) = node.arguments else { return base }
-//        // Extract our key if provided and strip .self, otherwise default to declared name
-//        let typeExpression = arguments.first { $0.label?.text == "by" }?.expression
-//        let type = typeExpression?.description.replacingOccurrences(of: ".self", with: "")
-//        if type != "nil" && type != nil { base.append(try ExtensionDeclSyntax("extension SomeStruct: \(raw: type!) {  }")) }
+        // add stitchable conformance
+        let base = [try ExtensionDeclSyntax("extension \(name): Stitchable {}")]
+        guard case .argumentList(_) = node.arguments else { return base }
         return base
-    }
-    
-    public static func expansion(
-        of node: SwiftSyntax.AttributeSyntax,
-        providingPeersOf declaration: some SwiftSyntax.DeclSyntaxProtocol,
-        in context: some SwiftSyntaxMacros.MacroExpansionContext
-    ) throws -> [DeclSyntax] {
-        [
-            """
-            struct MyKey {
-                static var dependency: any SomeProtocol { SomeStruct.resolve() }
-            }
-            """
-        ]
     }
 }

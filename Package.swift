@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 
 import PackageDescription
 import CompilerPluginSupport
@@ -21,7 +21,7 @@ let package = Package(
     ],
     dependencies: [
         // Depend on the latest Swift 5.9 prerelease of SwiftSyntax
-        .package(url: "https://github.com/apple/swift-syntax.git", from: "509.0.2"),
+        .package(url: "https://github.com/apple/swift-syntax.git", from: "600.0.1"),
     ],
     targets: [
         .macro(

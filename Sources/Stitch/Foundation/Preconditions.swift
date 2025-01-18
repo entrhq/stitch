@@ -24,12 +24,12 @@ func precondition(
     file: StaticString = #file,
     line: UInt = #line
 ) {
-    Preconditions.closure(condition(), message(), file, line)
+//    Preconditions.closure(condition(), message(), file, line)
 }
 
 struct Preconditions {
     /// Wrapper closure for executing swift's default precondition whilst providing
     /// the ability to swap out at run time for testing.
-    public static var closure: (Bool, String, StaticString, UInt) -> Void = defaultPreconditionClosure
-    public static let defaultPreconditionClosure = {Swift.precondition($0, $1, file: $2, line: $3)}
+//    public static var closure: (Bool, String, StaticString, UInt) -> Void = defaultPreconditionClosure
+//    public static let defaultPreconditionClosure = {Swift.precondition($0, $1, file: $2, line: $3)}
 }

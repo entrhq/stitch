@@ -52,5 +52,5 @@
 ///     DependencyMap.resolve(\.object)
 ///
 public class DependencyMap: DependencyLifecycleScope {
-    internal static var map = DependencyMap()
+//    internal static var map = DependencyMap()
 }

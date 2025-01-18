@@ -15,6 +15,5 @@ extension String: Scope {
 
 public enum StitchableScope {
     case application
-    case cached
     case unique
 }
