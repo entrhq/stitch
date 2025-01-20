@@ -1,3 +1,10 @@
+//
+//  example.swift
+//  Stitch
+//
+//  Created by Justin Wilkin on 20/1/2025.
+//
+
 import Stitch
 import Combine
 import Foundation
@@ -53,5 +60,11 @@ class AnotherClass {
     }
 }
 
-SomeStruct().doSomething()
-AnotherClass().doSomething()
+@main
+struct Main {
+    @MainActor
+    static func main() {
+        SomeStruct().doSomething()
+        AnotherClass().doSomething()
+    }
+}

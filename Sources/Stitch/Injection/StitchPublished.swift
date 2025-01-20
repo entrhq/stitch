@@ -53,17 +53,6 @@ public class StitchPublished<Dependency: Stitchable>: DependencyLifecycleScope {
     ///
     /// This is due to the nature of Generics and the need for `DynamicMemberLookup`
     public var projectedValue: Wrapper {
-        /// Our dependency may have changed since creation. Retrigger our subscription forwarding
-        /// through observe(). This ensures that our object when changed
-        /// will publish from the newly registered dependency.
-        ///
-        /// Note: this will re-observe on every subscription. So multiple subscriptions after each other
-        /// will trigger multiple observes. This can lead to recreation of the objectWillChange on multiple
-        /// occurances. This may seem expensive at first glance, but only one reference to the objectWillChange
-        /// is kept in memory at any point in time, and for all new subscribers that trigger observe(), the new
-        /// `ObjectWillChange` will be valid for all previous subscribers as it simply forwards all change events to
-        /// our single reference of `StitchPublished` and its single `Publisher`.
-        ///
         /// The `Wrapper` here subscribes our `ChangePublisher` to the single reference of `Publisher`
         /// ensuring no mutation of previous subscriber instances.
         return Wrapper(self)
@@ -77,7 +66,7 @@ public class StitchPublished<Dependency: Stitchable>: DependencyLifecycleScope {
     /// Generic typed wrapper for `ObservableObjects` erased as `AnyObservableObjects`.
     ///
     /// This wraps the `AnyObservableObject` and provides `DynamicMemberLookup` for properties on the object.
-    /// It wraps each property in a `ChangePublisher` which forwards publishe events for handling update events for
+    /// It wraps each property in a `ChangePublisher` which forwards published events for handling update events for
     /// that property alone, rather than the whole object.
     @MainActor
     @dynamicMemberLookup
@@ -89,7 +78,7 @@ public class StitchPublished<Dependency: Stitchable>: DependencyLifecycleScope {
         }
         
         /// Fetches the published wrapper attached to the given property
-        func getPublishedWrapper<Object, Value: Equatable>(
+        private func getPublishedWrapper<Object, Value: Equatable>(
             of object: Object,
             for keyPath: KeyPath<Object, Value>
         ) -> Combine.Published<Value>? {
@@ -111,7 +100,7 @@ public class StitchPublished<Dependency: Stitchable>: DependencyLifecycleScope {
         }
         
         /// Traverses the publisher object to get the underlying current value
-        func getPublishedValue<Value>(from published: Combine.Published<Value>) -> Value? {
+        private func getPublishedValue<Value>(from published: Combine.Published<Value>) -> Value? {
             let publishedMirror = Mirror(reflecting: published)
             let traverseValue: Value? = MirrorTraverser(mirror: publishedMirror)
                 .traverse(by: "storage")?
@@ -130,7 +119,6 @@ public class StitchPublished<Dependency: Stitchable>: DependencyLifecycleScope {
             return ChangePublisher(rootPublisher: published?.projectedValue).publisher
         }
     }
-
     
     /// Used for wrapping an @Published property and forwarding published events through the StitchPublished projectedValue
     @MainActor

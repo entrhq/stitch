@@ -1,6 +1,7 @@
 import Stitch
 import SwiftUI
 
+@MainActor
 protocol SomeObservableTestProtocol: ObservableObject, AnyObservableObject {
     var someObservableProperty: String { get set }
     func doSomething()
