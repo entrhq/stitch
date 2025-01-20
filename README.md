@@ -20,6 +20,7 @@ Stitch provides the following key functionality:
 * [Get stitching](#get-stitching)
 * [Examples](#examples)
 * [Advanced stitching](#advanced-stitching)
+    * [Stitch by Protocol](#using-stitchprotocol)
     * [@StitchObservable](#using-stitchobservable)
     * [@StitchPublished](#using-stitchpublished)
 * [Community](#community)
