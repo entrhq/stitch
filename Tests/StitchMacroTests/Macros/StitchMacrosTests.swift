@@ -23,10 +23,14 @@ final class StitchMacrosTests: XCTestCase {
 
                 static var scope: StitchableScope = .application
 
-                static var dependency: SomeStruct  = SomeStruct ()
+                static var dependency: SomeStruct  = createNewInstance()
+
+                static func createNewInstance() -> SomeStruct  {
+                    SomeStruct ()
+                }
             }
 
-            extension SomeStruct: Stitchable {
+            extension SomeStruct : Stitchable {
             }
             """,
             macros: testMacros
@@ -36,7 +40,7 @@ final class StitchMacrosTests: XCTestCase {
     func testStitchifyExpandsWithScopedArgument() {
         assertMacroExpansion(
             """
-            @Stitchify(scoped: .cached)
+            @Stitchify(scoped: .unique)
             struct SomeStruct {
                 var property: String = "test"
             }
@@ -46,12 +50,16 @@ final class StitchMacrosTests: XCTestCase {
             struct SomeStruct {
                 var property: String = "test"
 
-                static var scope: StitchableScope = .cached
+                static var scope: StitchableScope = .unique
 
-                static var dependency: SomeStruct  = SomeStruct ()
+                static var dependency: SomeStruct  = createNewInstance()
+
+                static func createNewInstance() -> SomeStruct  {
+                    SomeStruct ()
+                }
             }
 
-            extension SomeStruct: Stitchable {
+            extension SomeStruct : Stitchable {
             }
             """,
             macros: testMacros
@@ -75,13 +83,14 @@ final class StitchMacrosTests: XCTestCase {
 
                 static var scope: StitchableScope = .application
 
-                static var dependency: any SomeProtocol = SomeStruct ()
+                static var dependency: any SomeProtocol = createNewInstance()
+
+                static func createNewInstance() -> any SomeProtocol {
+                    SomeStruct ()
+                }
             }
 
-            extension SomeStruct: Stitchable {
-            }
-
-            extension SomeStruct: SomeProtocol {
+            extension SomeStruct : Stitchable {
             }
             """,
             macros: testMacros
@@ -105,13 +114,14 @@ final class StitchMacrosTests: XCTestCase {
 
                 static var scope: StitchableScope = .cached
 
-                static var dependency: any SomeProtocol = SomeStruct ()
+                static var dependency: SomeStruct  = createNewInstance()
+
+                static func createNewInstance() -> SomeStruct  {
+                    SomeStruct ()
+                }
             }
 
-            extension SomeStruct: Stitchable {
-            }
-
-            extension SomeStruct: SomeProtocol {
+            extension SomeStruct : Stitchable {
             }
             """,
             macros: testMacros

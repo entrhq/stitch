@@ -10,8 +10,8 @@ import Combine
 import SwiftUI
 
 @Stitchify
-class StitchAlertStore: StitchAlertStoring {
-//    @StitchPublished(\.store) var store
+class StitchAlertStore: ObservableObject, AnyObservableObject {
+    @StitchPublished(SewingStore.self) private var store
     private var cancellable: AnyCancellable?
     
     @Published var showAlert: Bool = false
@@ -22,15 +22,15 @@ class StitchAlertStore: StitchAlertStoring {
     }
     
     required init() {
-//        cancellable = $store.stitches
-//            .map { $0.last }
-//            .sink { [weak self] stitch in
-//                guard let stitch, let self else { return }
-//                self.alert = Alert(
-//                    title: Text("New stitch"),
-//                    message: Text("A new stitch: '\(stitch.name)' has been added. Check it out now")
-//                )
-//            }
+        cancellable = $store.stitches
+            .map { $0.last }
+            .sink { [weak self] stitch in
+                guard let stitch, let self else { return }
+                self.alert = Alert(
+                    title: Text("New stitch"),
+                    message: Text("A new stitch: '\(stitch.name)' has been added. Check it out now")
+                )
+            }
     }
 }
 

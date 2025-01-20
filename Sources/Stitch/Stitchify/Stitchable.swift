@@ -19,14 +19,7 @@ public protocol Stitchable<Dependency> {
     init()
 }
 
-extension Stitchable {
-    public static func resolve() -> Dependency {
-        switch scope {
-        case .application: return dependency // always use the same instance
-        case .unique: return createNewInstance() // create a new instance every time
-        }
-    }
-    
+extension Stitchable {    
     public static func register(dependency: Dependency) {
         self.dependency = dependency
     }

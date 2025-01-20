@@ -1,26 +1,26 @@
 //
-//  SewingStore.swift
-//  Stitched
+//  SewingInteractor.swift
+//  Stitch
 //
-//  Created by Justin Wilkin on 10/4/2023.
+//  Created by Justin Wilkin on 20/1/2025.
 //
 
 import Stitch
-import Combine
 
-@Stitchify(by: SewingStoring.self)
-class SewingStore: SewingStoring {
+/// Creating a stitchified dependency using .application will result in a single dependency returned
+/// for all locations injected
+@Stitchify(scoped: .application)
+class SewingInteractor {
     @Stitch(SewingRepository.self) private var repository
-    @Published var stitches: [SewingStitch] = []
-    @Published var other: String = ""
+    @Stitch(SewingStore.self) private var store
     
     func fetchStitches() async {
         guard let stitches = try? await repository.fetchStitches() else { return }
-        self.stitches = stitches
+        store.stitches = stitches
     }
     
     func addStitch() {
-        stitches.append(
+        store.stitches.append(
             SewingStitch(
                 name: "Running stitch",
                 difficulty: "easy",

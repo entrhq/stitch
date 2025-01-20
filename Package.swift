@@ -37,12 +37,16 @@ let package = Package(
         ),
         .executableTarget(name: "StitchClient", dependencies: ["Stitch"]),
         .testTarget(
-            name: "StitchTests",
+            name: "StitchMacroTests",
             dependencies: [
                 "Stitch",
                 "StitchMacros",
                 .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
             ]
+        ),
+        .testTarget(
+            name: "StitchTests",
+            dependencies: ["Stitch"]
         ),
     ]
 )

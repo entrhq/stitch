@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D01C54F42D3E64240072704F /* SewingInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C54F22D3E64240072704F /* SewingInteractor.swift */; };
 		D045208F29E3A225005AB753 /* StitchedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D045208E29E3A225005AB753 /* StitchedApp.swift */; };
 		D045209129E3A225005AB753 /* StitchedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D045209029E3A225005AB753 /* StitchedView.swift */; };
 		D045209329E3A227005AB753 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D045209229E3A227005AB753 /* Assets.xcassets */; };
@@ -20,7 +21,6 @@
 		D04520C629E3A738005AB753 /* stitches.json in Resources */ = {isa = PBXBuildFile; fileRef = D04520C529E3A738005AB753 /* stitches.json */; };
 		D04520C929E3B0BC005AB753 /* StitchedMockedPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04520C829E3B0BC005AB753 /* StitchedMockedPreview.swift */; };
 		D04520CC29E3B21B005AB753 /* StitchAlertStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04520CB29E3B21B005AB753 /* StitchAlertStore.swift */; };
-		D04520CE29E3B23E005AB753 /* StitchAlertStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04520CD29E3B23E005AB753 /* StitchAlertStoring.swift */; };
 		D04520D029E3B56E005AB753 /* StitchedWithAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04520CF29E3B56E005AB753 /* StitchedWithAlert.swift */; };
 		D04520D229E3B703005AB753 /* SewingStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04520D129E3B703005AB753 /* SewingStoring.swift */; };
 /* End PBXBuildFile section */
@@ -43,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D01C54F22D3E64240072704F /* SewingInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SewingInteractor.swift; sourceTree = "<group>"; };
 		D045208B29E3A225005AB753 /* Stitched.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stitched.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D045208E29E3A225005AB753 /* StitchedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StitchedApp.swift; sourceTree = "<group>"; };
 		D045209029E3A225005AB753 /* StitchedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StitchedView.swift; sourceTree = "<group>"; };
@@ -58,7 +59,6 @@
 		D04520C529E3A738005AB753 /* stitches.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = stitches.json; sourceTree = "<group>"; };
 		D04520C829E3B0BC005AB753 /* StitchedMockedPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StitchedMockedPreview.swift; sourceTree = "<group>"; };
 		D04520CB29E3B21B005AB753 /* StitchAlertStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StitchAlertStore.swift; sourceTree = "<group>"; };
-		D04520CD29E3B23E005AB753 /* StitchAlertStoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StitchAlertStoring.swift; sourceTree = "<group>"; };
 		D04520CF29E3B56E005AB753 /* StitchedWithAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StitchedWithAlert.swift; sourceTree = "<group>"; };
 		D04520D129E3B703005AB753 /* SewingStoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SewingStoring.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -89,6 +89,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D01C54F32D3E64240072704F /* 04-Scoped */ = {
+			isa = PBXGroup;
+			children = (
+				D04520C329E3A6F7005AB753 /* SewingRepository.swift */,
+				D01C54F22D3E64240072704F /* SewingInteractor.swift */,
+			);
+			path = "04-Scoped";
+			sourceTree = "<group>";
+		};
 		D045208229E3A225005AB753 = {
 			isa = PBXGroup;
 			children = (
@@ -116,6 +125,7 @@
 				D04520C129E3A661005AB753 /* 01-GettingStarted */,
 				D04520C729E3B08D005AB753 /* 02-MockingPreviews */,
 				D04520CA29E3B1AA005AB753 /* 03-StitchPublished */,
+				D01C54F32D3E64240072704F /* 04-Scoped */,
 				D045208E29E3A225005AB753 /* StitchedApp.swift */,
 				D045209229E3A227005AB753 /* Assets.xcassets */,
 			);
@@ -154,7 +164,6 @@
 				D04520BD29E3A4F5005AB753 /* SewingStitch.swift */,
 				D04520BF29E3A5D2005AB753 /* SewingStore.swift */,
 				D04520D129E3B703005AB753 /* SewingStoring.swift */,
-				D04520C329E3A6F7005AB753 /* SewingRepository.swift */,
 			);
 			path = "00-Setup";
 			sourceTree = "<group>";
@@ -171,7 +180,6 @@
 			isa = PBXGroup;
 			children = (
 				D04520CB29E3B21B005AB753 /* StitchAlertStore.swift */,
-				D04520CD29E3B23E005AB753 /* StitchAlertStoring.swift */,
 				D04520CF29E3B56E005AB753 /* StitchedWithAlert.swift */,
 			);
 			path = "03-StitchPublished";
@@ -316,13 +324,13 @@
 				D04520CC29E3B21B005AB753 /* StitchAlertStore.swift in Sources */,
 				D04520BE29E3A4F5005AB753 /* SewingStitch.swift in Sources */,
 				D045209129E3A225005AB753 /* StitchedView.swift in Sources */,
-				D04520CE29E3B23E005AB753 /* StitchAlertStoring.swift in Sources */,
 				D04520C029E3A5D2005AB753 /* SewingStore.swift in Sources */,
 				D045208F29E3A225005AB753 /* StitchedApp.swift in Sources */,
 				D04520C929E3B0BC005AB753 /* StitchedMockedPreview.swift in Sources */,
 				D04520D229E3B703005AB753 /* SewingStoring.swift in Sources */,
 				D04520C429E3A6F7005AB753 /* SewingRepository.swift in Sources */,
 				D04520D029E3B56E005AB753 /* StitchedWithAlert.swift in Sources */,
+				D01C54F42D3E64240072704F /* SewingInteractor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

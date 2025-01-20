@@ -33,6 +33,7 @@
 ///         implementations, the use of a concrete `Value` type is preferred over an `Existential` type,
 ///         providing less overhead at runtime for the application, and allowing for the compiler to optimise and
 ///         statically dispatch the dependency.
+@available(*, deprecated, message: "dependency resolution has moved to macros. See @Stitchify")
 public protocol DependencyKey {
     associatedtype Value
     static var dependency: Value { get set }

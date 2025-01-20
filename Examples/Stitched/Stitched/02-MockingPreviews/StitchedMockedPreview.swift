@@ -22,10 +22,11 @@ struct StitchedMockedPreview: PreviewProvider {
         func fetchStitches() async {}
         func addStitch() {}
     }
-    
+
     static var previews: some View {
-//        mockInViewScope(\.store, mock: MockSewingStore())
         StitchedView()
+            .onAppear {
+                SewingStore.register(dependency: MockSewingStore())
+            }
     }
 }
-

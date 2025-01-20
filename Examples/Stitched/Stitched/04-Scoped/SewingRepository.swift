@@ -8,7 +8,10 @@
 import Stitch
 import Foundation
 
-@Stitchify
+/// Creating a stitchified dependency using .unique will result in a new dependency returned
+/// for each dependency injection. This is useful for stateless objects, or when state should be local
+/// to each injection location.
+@Stitchify(scoped: .unique)
 struct SewingRepository {
     enum SewingError: Error {
         case notFound
