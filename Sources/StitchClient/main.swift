@@ -2,29 +2,27 @@ import Stitch
 import Combine
 import Foundation
 
+protocol Store: ObservableObject, AnyObservableObject {}
+
 // MARK: SAME
 @MainActor
-protocol SomeProtocol {
+protocol SomeProtocol: Store {
     var uuid: UUID { get }
     var property: String { get set }
 }
 
-typealias SomeStoreBox = SomeStore
 @Stitchify(by: SomeProtocol.self, scoped: .application)
-class SomeStore: SomeProtocol, ObservableObject, AnyObservableObject {
-    var objectDidChange = ObservableObjectPublisher()
-    var cancellables: Set<AnyCancellable> = []
+class SomeStore: SomeProtocol {
     required init() {}
-    
     var uuid = UUID()
     @Published var property: String = "hello"
     @Published var otherProperty: String = "not visible by protocol"
 }
 
 @MainActor
-struct SomeClass {
-    @Stitch(SomeStoreBox.self) var new
-    @StitchObservable(SomeStoreBox.self) var newObservable
+struct SomeStruct {
+    @Stitch(SomeStore.self) var new
+    @StitchObservable(SomeStore.self) var newObservable
     
     func doSomething() {
         print(new.property)
@@ -34,19 +32,16 @@ struct SomeClass {
 
 @MainActor
 class AnotherClass {
-    @Stitch(SomeStoreBox.self) var new
-    @StitchObservable(SomeStoreBox.self) var newObservable
-    @StitchPublished(SomeStoreBox.self) var newPublished
+    @Stitch(SomeStore.self) var new
+    @StitchObservable(SomeStore.self) var newObservable
+    @StitchPublished(SomeStore.self) var newPublished
     var cancellables: Set<AnyCancellable> = []
     
     func doSomething() {
-//        var wrapper = $newPublished.property
-//        var property: Published<String>.Publisher? = wrapper.property
-//        print(type(of: property))
-        
-        
-//            .sink { print("property is changing to: \($0)") }
-//            .store(in: &cancellables)
+        $newPublished
+            .property
+            .sink { print("property is changing to: \($0)") }
+            .store(in: &cancellables)
         
         print("making changes: world")
         newPublished.property = "world"
@@ -58,5 +53,5 @@ class AnotherClass {
     }
 }
 
-SomeClass().doSomething()
+SomeStruct().doSomething()
 AnotherClass().doSomething()

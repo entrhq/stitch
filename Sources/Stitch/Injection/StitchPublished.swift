@@ -125,9 +125,9 @@ public class StitchPublished<Dependency: Stitchable>: DependencyLifecycleScope {
         
         public subscript<Subject: Equatable>(
             dynamicMember keyPath: ReferenceWritableKeyPath<Dependency.Dependency, Subject>
-        ) -> ChangePublisher<Subject> {
+        ) -> Publisher<Subject> {
             var published = getPublishedWrapper(of: self.wrapped.wrappedValue, for: keyPath)
-            return ChangePublisher(rootPublisher: published?.projectedValue)
+            return ChangePublisher(rootPublisher: published?.projectedValue).publisher
         }
     }
 

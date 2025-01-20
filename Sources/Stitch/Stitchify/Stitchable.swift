@@ -6,7 +6,7 @@
 //
 
 @MainActor
-public protocol Stitchable {
+public protocol Stitchable<Dependency> {
     associatedtype Dependency
     // MARK: dependency storage
     static var scope: StitchableScope { get }
