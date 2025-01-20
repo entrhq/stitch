@@ -18,18 +18,20 @@
 /// Its encapsulated closure can be modified at run time through modifying
 /// `Preconditions.closure` for ease of testing without exiting our program, or for
 /// swallowing our precondition errors, handling them gracefully or composing further functionality.
+@MainActor
 func precondition(
     _ condition: @autoclosure () -> Bool,
     _ message: @autoclosure () -> String = "",
     file: StaticString = #file,
     line: UInt = #line
 ) {
-//    Preconditions.closure(condition(), message(), file, line)
+    Preconditions.closure(condition(), message(), file, line)
 }
 
+@MainActor
 struct Preconditions {
     /// Wrapper closure for executing swift's default precondition whilst providing
     /// the ability to swap out at run time for testing.
-//    public static var closure: (Bool, String, StaticString, UInt) -> Void = defaultPreconditionClosure
-//    public static let defaultPreconditionClosure = {Swift.precondition($0, $1, file: $2, line: $3)}
+    public static var closure: (Bool, String, StaticString, UInt) -> Void = defaultPreconditionClosure
+    public static let defaultPreconditionClosure = {Swift.precondition($0, $1, file: $2, line: $3)}
 }

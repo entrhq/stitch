@@ -1,4 +1,5 @@
 import Stitch
+import Combine
 import Foundation
 
 // MARK: SAME
@@ -8,21 +9,22 @@ protocol SomeProtocol {
     var property: String { get set }
 }
 
-@Stitchify(by: SomeProtocol.self, scoped: .unique)
-class SomeStore: SomeProtocol {
+typealias SomeStoreBox = SomeStore
+@Stitchify(by: SomeProtocol.self, scoped: .application)
+class SomeStore: SomeProtocol, ObservableObject, AnyObservableObject {
+    var objectDidChange = ObservableObjectPublisher()
+    var cancellables: Set<AnyCancellable> = []
     required init() {}
+    
     var uuid = UUID()
-    var property: String = "hello"
-    var otherProperty: String = "not visible by protocol"
+    @Published var property: String = "hello"
+    @Published var otherProperty: String = "not visible by protocol"
 }
 
-typealias SomeStoreType = SomeStore
-
-// MARK: IMPL
 @MainActor
 struct SomeClass {
-    @Stitched(SomeStore.self) var new
-    @StitchedObservable(SomeStore.self) var newObservable
+    @Stitch(SomeStoreBox.self) var new
+    @StitchObservable(SomeStoreBox.self) var newObservable
     
     func doSomething() {
         print(new.property)
@@ -31,16 +33,30 @@ struct SomeClass {
 }
 
 @MainActor
-struct AnotherClass {
-    @Stitched(SomeStoreType.self) var new
-    @StitchedObservable(SomeStore.self) var newObservable
+class AnotherClass {
+    @Stitch(SomeStoreBox.self) var new
+    @StitchObservable(SomeStoreBox.self) var newObservable
+    @StitchPublished(SomeStoreBox.self) var newPublished
+    var cancellables: Set<AnyCancellable> = []
     
     func doSomething() {
-        print(new.property)
-        print(newObservable.uuid)
+//        var wrapper = $newPublished.property
+//        var property: Published<String>.Publisher? = wrapper.property
+//        print(type(of: property))
+        
+        
+//            .sink { print("property is changing to: \($0)") }
+//            .store(in: &cancellables)
+        
+        print("making changes: world")
+        newPublished.property = "world"
+        
+        print("changing again: new")
+        newPublished.property = "new"
+        
+        print("closing")
     }
 }
 
-// these class id's will be different because our injection was set to unique.
 SomeClass().doSomething()
 AnotherClass().doSomething()

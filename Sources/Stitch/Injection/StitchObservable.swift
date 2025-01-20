@@ -17,13 +17,13 @@ import Combine
 
 @MainActor
 @propertyWrapper
-public struct StitchedObservable<Dependency: Stitchable>: DynamicProperty, DependencyLifecycleScope {
+public struct StitchObservable<Dependency: Stitchable>: DynamicProperty, DependencyLifecycleScope {
     @MainActor
     @dynamicMemberLookup
     public struct Wrapper {
-        private var wrapped: StitchedObservable
+        private var wrapped: StitchObservable
         
-        internal init(_ wrap: StitchedObservable<Dependency>) {
+        internal init(_ wrap: StitchObservable<Dependency>) {
             self.wrapped = wrap
         }
         
@@ -62,7 +62,7 @@ public struct StitchedObservable<Dependency: Stitchable>: DynamicProperty, Depen
     }
     
     private mutating func observe() {
-        let observable = wrappedValue as? AnyObservableObject
+        let observable = wrappedValue as? (any AnyObservableObject)
         
         precondition(observable != nil, "Cannot observe an object that does not confrom to 'AnyObservableObject'")
         
