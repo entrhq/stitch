@@ -3,14 +3,13 @@ import Combine
 import SwiftUI
 @testable import Stitch
 
-final class StitchNonObservablePreconditionPropertyWrapperTest: XCTestCase, DependencyRegistrant, DependencyMocker {
-    private var disposables = Set<AnyCancellable>()
-    
+@MainActor
+final class StitchNonObservablePreconditionPropertyWrapperTest: XCTestCase {
     // MARK: - Mock objects
-    
     // Wrapper class for delaying our injection because injection happens on instantation of object
-    class WrapperClass {
-        @StitchObservable(\.testObject) var testNonObservableObject: any SomeTestProtocol
+    @MainActor
+    struct WrapperClass {
+        @StitchObservable(TestObject.self) var testNonObservableObject
     }
     
     // MARK: - Precondition
@@ -21,4 +20,3 @@ final class StitchNonObservablePreconditionPropertyWrapperTest: XCTestCase, Depe
         }
     }
 }
-

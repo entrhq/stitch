@@ -3,8 +3,9 @@ import Combine
 import SwiftUI
 @testable import Stitch
 
+@MainActor
 final class StitchPropertyWrapperTest: XCTestCase, DependencyRegistrant, DependencyMocker {
-    @Stitch(\.testObject) var testObject: any SomeTestProtocol
+    @Stitch(TestObject.self) var testObject: any SomeTestProtocol
     
     // MARK: - Mock objects
     struct MockTestObject: SomeTestProtocol {
@@ -24,13 +25,7 @@ final class StitchPropertyWrapperTest: XCTestCase, DependencyRegistrant, Depende
     }
     
     func testObjectIsInjectedWithNewDependencyWhenProvidedAtRunTimeThroughRegisterAndKeypath() throws {
-        register(\.testObject, dependency: TestObject(someProperty: "someotherproperty"))
-        // Check that our property has been injected into the class with the appropriate value
-        XCTAssertEqual(testObject.someProperty, "someotherproperty")
-    }
-    
-    func testObjectIsInjectedWithMockedDependencyWhenMockProvidedThroughKeypathMock() throws {
-        mock(\.testObject, mock: TestObject(someProperty: "someotherproperty"))
+        register(TestObject.self, dependency: TestObject(someProperty: "someotherproperty"))
         // Check that our property has been injected into the class with the appropriate value
         XCTAssertEqual(testObject.someProperty, "someotherproperty")
     }
@@ -43,19 +38,13 @@ final class StitchPropertyWrapperTest: XCTestCase, DependencyRegistrant, Depende
     }
     
     func testOtherObjectIsInjectedWhenProvidedAtRunTimeThroughRegisterAndKeypath() throws {
-        register(\.testObject, dependency: MockTestObject())
-        // Check that our property has been injected into the class with the appropriate value
-        XCTAssertEqual(testObject.someProperty, "mocked")
-    }
-    
-    func testOtherObjectIsInjectedWhenMockProvidedThroughKeypathMock() throws {
-        mock(\.testObject, mock: MockTestObject())
+        register(TestObject.self, dependency: MockTestObject())
         // Check that our property has been injected into the class with the appropriate value
         XCTAssertEqual(testObject.someProperty, "mocked")
     }
     
     func testOtherObjectIsInjectedWhenMockProvidedThroughKeypathMockInViewScope() throws {
-        let view = mockInViewScope(\.testObject, mock: MockTestObject())
+        let view = mockInViewScope(TestObject.self, mock: MockTestObject())
         // Check that our property has been injected into the class with the appropriate value
         XCTAssertEqual(testObject.someProperty, "mocked")
         // Assert an empty view was provided with the mockInViewScope

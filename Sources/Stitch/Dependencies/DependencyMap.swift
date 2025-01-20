@@ -51,6 +51,8 @@
 ///     or
 ///     DependencyMap.resolve(\.object)
 ///
+@available(*, deprecated, message: "dependency resolution has moved to macros. See @Stitchify")
 public class DependencyMap: DependencyLifecycleScope {
+    @MainActor
     internal static var map = DependencyMap()
 }

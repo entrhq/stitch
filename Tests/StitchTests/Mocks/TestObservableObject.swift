@@ -1,25 +1,19 @@
 import Stitch
 import SwiftUI
 
+@MainActor
 protocol SomeObservableTestProtocol: ObservableObject, AnyObservableObject {
     var someObservableProperty: String { get set }
     func doSomething()
 }
 
+@MainActor
+@Stitchify(by: SomeObservableTestProtocol.self)
 class TestObservableObject: SomeObservableTestProtocol {
+    required init() {}
     @Published var someObservableProperty: String = "test"
     func doSomething() {
+        print("changing to did something original")
         someObservableProperty = "did something"
-    }
-}
-
-extension DependencyMap {
-    private struct TestObservableObjectKey: DependencyKey {
-        static var dependency: any SomeObservableTestProtocol = TestObservableObject()
-    }
-    
-    var testObservableObject: any SomeObservableTestProtocol {
-        get { resolve(key: TestObservableObjectKey.self) }
-        set { register(key: TestObservableObjectKey.self, dependency: newValue) }
     }
 }

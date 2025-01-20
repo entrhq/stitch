@@ -2,6 +2,7 @@ import XCTest
 @testable import Stitch
 
 extension XCTestCase {
+    @MainActor
     public func expectingPreconditionFailure(_ expectedMessage: String, _ execute: () -> ()) {
 
         let expectation = expectation(description: "Precondition should fail")

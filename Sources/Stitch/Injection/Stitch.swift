@@ -12,15 +12,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+@MainActor
 @propertyWrapper
-public struct Stitch<Dependency>: DependencyLifecycleScope {
-    private let keyPath: WritableKeyPath<DependencyMap, Dependency>
-    public var wrappedValue: Dependency {
-        get { resolve(keyPath) }
-        set { register(keyPath, dependency: newValue) }
+public struct Stitch<Dependency: Stitchable>: DependencyLifecycleScope {
+    private let stitchedType: (Dependency).Type
+    public var wrappedValue: Dependency.Dependency {
+        get { stitchedType.resolve() }
+        set { stitchedType.register(dependency: newValue) }
     }
     
-    public init(_ keyPath: WritableKeyPath<DependencyMap, Dependency>) {
-        self.keyPath = keyPath
+    public init(_ type: (Dependency).Type) {
+        self.stitchedType = type
     }
 }

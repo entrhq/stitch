@@ -8,7 +8,7 @@
 import Stitch
 import SwiftUI
 
-struct StitchedMockedPreview: PreviewProvider, DependencyMocker {
+struct StitchedMockedPreview: PreviewProvider {
     class MockSewingStore: SewingStoring {
         @Published var stitches: [SewingStitch] =
             [
@@ -22,10 +22,11 @@ struct StitchedMockedPreview: PreviewProvider, DependencyMocker {
         func fetchStitches() async {}
         func addStitch() {}
     }
-    
+
     static var previews: some View {
-        mockInViewScope(\.store, mock: MockSewingStore())
         StitchedView()
+            .onAppear {
+                SewingStore.register(dependency: MockSewingStore())
+            }
     }
 }
-

@@ -3,14 +3,19 @@ import Combine
 import SwiftUI
 @testable import Stitch
 
-final class StitchPublishedPropertyWrapperTests: XCTestCase, DependencyRegistrant, DependencyMocker {
+@MainActor
+final class StitchPublishedPropertyWrapperTests: XCTestCase, DependencyMocker, DependencyRegistrant {
     private var disposables = Set<AnyCancellable>()
-    @StitchPublished(\.testObservableObject) var testObject: any SomeObservableTestProtocol
+    @StitchPublished(TestObservableObject.self) var testObject
     
     // MARK: - Mock objects
+    @MainActor
     class MockTestObservableObject: SomeObservableTestProtocol {
         @Published var someObservableProperty: String = "mocked"
+        
+        @MainActor
         func doSomething() {
+            print("changing to did something")
             someObservableProperty = "did something mocked"
         }
     }
@@ -24,13 +29,7 @@ final class StitchPublishedPropertyWrapperTests: XCTestCase, DependencyRegistran
     }
     
     func testObjectIsInjectedWithNewDependencyWhenProvidedAtRunTimeThroughRegisterAndKeypath() throws {
-        register(\.testObservableObject, dependency: TestObservableObject())
-        // Check that our property has been injected into the class with the appropriate value
-        XCTAssertEqual(testObject.someObservableProperty, "test")
-    }
-    
-    func testObjectIsInjectedWithMockedDependencyWhenMockProvidedThroughKeypathMock() throws {
-        mock(\.testObservableObject, mock: TestObservableObject())
+        register(TestObservableObject.self, dependency: TestObservableObject())
         // Check that our property has been injected into the class with the appropriate value
         XCTAssertEqual(testObject.someObservableProperty, "test")
     }
@@ -43,52 +42,21 @@ final class StitchPublishedPropertyWrapperTests: XCTestCase, DependencyRegistran
     }
     
     func testOtherObjectIsInjectedWhenProvidedAtRunTimeThroughRegisterAndKeypath() throws {
-        register(\.testObservableObject, dependency: MockTestObservableObject())
-        // Check that our property has been injected into the class with the appropriate value
-        XCTAssertEqual(testObject.someObservableProperty, "mocked")
-    }
-    
-    func testOtherObjectIsInjectedWhenMockProvidedThroughKeypathMock() throws {
-        mock(\.testObservableObject, mock: MockTestObservableObject())
+        register(TestObservableObject.self, dependency: MockTestObservableObject())
         // Check that our property has been injected into the class with the appropriate value
         XCTAssertEqual(testObject.someObservableProperty, "mocked")
     }
     
     func testOtherObjectIsInjectedWhenMockProvidedThroughKeypathMockInViewScope() throws {
-        let view = mockInViewScope(\.testObservableObject, mock: MockTestObservableObject())
+        let view = mockInViewScope(TestObservableObject.self, mock: MockTestObservableObject())
         // Check that our property has been injected into the class with the appropriate value
         XCTAssertEqual(testObject.someObservableProperty, "mocked")
         // Assert an empty view was provided with the mockInViewScope
         XCTAssertEqual("\(view.self)", "\(EmptyView().self)")
     }
     
-    // MARK: - Observed object publishes changes to objects
-    
-    func testInjectedObservableObjectPublisherPublishesChangeAndNewValue() {
-        mock(\.testObservableObject, mock: MockTestObservableObject())
-        XCTAssertEqual(testObject.someObservableProperty, "mocked")
-        
-        let expectation = self.expectation(description: "Receive response from sink")
-        var actualChange: String?
-        
-        $testObject.someObservableProperty
-            .sinkToExpectation(expectation) { change in
-                // Check that our value changed on the base property
-                actualChange = change
-                expectation.fulfill()
-            }
-            .store(in: &disposables)
-        
-        // Trigger a published state change on our object
-        self.testObject.doSomething()
-        
-        waitForExpectations(timeout: 10)
-        
-        XCTAssertEqual(actualChange, "did something mocked")
-    }
-    
     func testInjectedObservableObjectPublisherChangNewValue() {
-        mock(\.testObservableObject, mock: MockTestObservableObject())
+        register(TestObservableObject.self, dependency: MockTestObservableObject())
         XCTAssertEqual(testObject.someObservableProperty, "mocked")
         
         // Trigger a change

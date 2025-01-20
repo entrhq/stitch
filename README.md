@@ -1,5 +1,5 @@
 # ![](Images/StitchLogo.png)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Compatibility](https://img.shields.io/badge/Swift%20compatibility-5.7%2B-green)]() [![Compatibility](https://img.shields.io/badge/iOS-13%2B-orange)]() [![Compatibility](https://img.shields.io/badge/Mac%20OS-10.15%2B-orange)]()
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Compatibility](https://img.shields.io/badge/Swift%20compatibility-5.9%2B-green)]() [![Compatibility](https://img.shields.io/badge/iOS-13%2B-orange)]() [![Compatibility](https://img.shields.io/badge/Mac%20OS-10.15%2B-orange)]()
 
 # Stitch
 A lightweight, SwiftUI inspired, compile time safe dependency injection (DI) 
@@ -8,7 +8,7 @@ library providing dependency mapping without the need for codegen tooling.
 Stitch's compile time safety ensures confidence throughout development, if it compiles, you've configured correctly. 
 No run time failures akin to typical dependency container implementations whenever a dependency has not been registered.
 
-Stitch models its dependency map after the SwiftUI `EnvironmentValues` structure, 
+Stitch models its dependency map using the new Swift 5.9+ macros for ergonomic use, 
 and provides appropriate `@propertyWrapper` implementations for retrieving objects from the map. 
 
 Stitch provides the following key functionality:
@@ -20,41 +20,33 @@ Stitch provides the following key functionality:
 * [Get stitching](#get-stitching)
 * [Examples](#examples)
 * [Advanced stitching](#advanced-stitching)
+    * [Stitch by Protocol](#using-stitchprotocol)
     * [@StitchObservable](#using-stitchobservable)
     * [@StitchPublished](#using-stitchpublished)
 * [Community](#community)
 
 ## Stitch in a pinch
-Using Stitch in your application is straightforward and aims to provide rich functionality with minimal boilerplate or code generation. Stitch achieves its compile time safety through the use of the DependencyMap which encapsulates all dependencies for resolution.
+Using Stitch in your application is straightforward and aims to provide rich functionality with minimal boilerplate or code generation. Stitch achieves its compile time safety through the use of Swift Macros which help stitch together dependencies for resolution and injection.
 
 To register a dependency:
-1. Declare a dynamic property within an extension of `DependencyMap`.
-2. Create a `DependencyKey` to store the initial/default value for the dependency.
-3. Resolve and register the key inside the dynamic property.
+1. Annotate your class or struct with @Stitchify
+2. Thats it! Its realy that simple.
 
 ```swift
 /// Protocol abstraction for our dependency
-protocol Logger {
-    func log(message: String) 
-}
-
-extension DependencyMap {
-    private struct LoggerKey: DependencyKey {
-        static var dependency: any Logger = RemoteLogger()
-    }
-
-    var logger: any Logger {
-        get { resolve(key: LoggerKey.self) }
-        set { register(key: LoggerKey.self, dependency: newValue) }
+@Stitchify
+struct Logger {
+    func log(message: String) {
+        ...
     }
 }
 ```
 
-This dependency can now be resolved by the Stich propertyWrappers from anywhere in the codebase, using the dynamic property keyPath for lookup.
+This dependency can now be resolved by the Stich propertyWrappers from anywhere in the codebase, using the dependencie's type for lookup.
 
 ```swift
 class Model {
-    @Stitch(\.logger) var logger
+    @Stitch(Logger.self) var logger
     
     func doSomething() {
         logger.log("Logging a message")
@@ -94,10 +86,42 @@ Included in the Stitch repo is an example project that demonstrates setting up a
 * [Getting started](https://github.com/entrhq/stitch/tree/main/Examples/Stitched/Stitched/01-GettingStarted)
 * [Mocking previews](https://github.com/entrhq/stitch/tree/main/Examples/Stitched/Stitched/02-MockingPreviews)
 * [Stitch Published](https://github.com/entrhq/stitch/tree/main/Examples/Stitched/Stitched/03-StitchPublished)
+* [Scoped dependencies](https://github.com/entrhq/stitch/tree/main/Examples/Stitched/Stitched/04-Scoped)
 
 ## Advanced stitching
+- [Stitch by Protocol](#using-stitchprotocol)
 - [StitchObservable](#using-stitchobservable)
 - [StichPublished](#using-stitchpublished)
+
+#### Using Stitch by Protocol
+Sometimes we want to inject dependencies using a protocol rather than it's concrete type. This is an important consideration when your archetecture leans more heavily on abstraction. 
+Whatever reason you may have that requires an abstraciton over a concrete type; whether it be for loose coupling, modular architecture or simply for creating mocks and test doubles as replacement for network calls, it is simple to 'key' your dependency injection by its protocol type instead of its concrete type.
+
+```swift
+protocol SomeNetworkAbstraction {
+    func post(resource String) -> Response
+}
+
+@Stitchify(by: SomeNetworkAbstraction.self)
+struct NetworkImplementation {
+    ...
+}
+```
+
+Simply add the `by:` property to the Stitchify macro and provide the protocol type you would like to key the dependency by. Now, when you access the dependency using any of Stitch's @propertyWrappers you will get the dependency by its abstraction, not its concrete type.
+
+```swift
+struct SomeInteractor {
+    @Stitch(NetworkImplementation.self) private var network
+    
+    func someAction() {
+        print(type(of: network)) // == SomeNetworkAbstraction.self
+        network.post("/hello")
+    }
+}
+```
+
+Note: the key for the dependency is still the implementation you have annotated with @Stitchify, this is due to Swift Macros limitation on `peer` macros at the global namespace.
 
 #### Using StitchObservable
 Stitch aims to provide flexible use of dependencies within the SwiftUI environment extending the traditional SwiftUI implementations with further functionality. Out of the box, SwiftUI provides both `ObservableObject` and the `@ObservedObject` property wrapper, allowing developers to push state into its own object to manage its lifecycle. This works well when using concrete dependencies in your views:
@@ -195,8 +219,17 @@ protocol Modelling: ObservableObject, AnyObservableObject {
     var isLoaded: Bool { get set }
 }
 
+// add our stitchify macro to wire the dependency injection
+// using the by property to key the dependency by its protocol instead
+// of concrete type
+@Stitchify(by: Modelling.self)
+class Model: Modelling {
+    ...
+}
+
 struct HomeView: View {
-    @StitchObservable(\.model) var model
+    // use stitch observable to inject the model
+    @StitchObservable(Model.self) var model
     
     var body: some View {
         Text("Welcome, \(model.name)")
@@ -214,7 +247,7 @@ struct HomeView_Previews: PreviewProvider, DependencyMocker {
     }
     
     static var previews: some View {
-        mockInViewScope(\.model, mock: MockModel())
+        mockInViewScope(Model.self, mock: MockModel())
         HomeView()
     }
 }
@@ -236,12 +269,13 @@ protocol AuthStoring: ObservableObject, AnyObservableObject {
     var isLoggedIn: Bool { get set }
 }
 
+@Stitchify(by: AuthStoring.self)
 class AuthStore: AuthStoring {
     @Published var isLoggedIn = false
 }
 
 class SomeService {
-    @StitchPublished(\.authStore) var store
+    @StitchPublished(AuthStore.self) var store
     
     ...
     
