@@ -5,11 +5,17 @@ on:
 
 jobs: 
   build-test-stitch:
-    name: Build and test with Swift ${{ matrix.swift }}
+    name: Build and test with Swift ${{ matrix.swift }} on ${{ matrix.os }}
     strategy:
       matrix:
-        swift: ['5.9', '6.0', 6]
-    runs-on: macos-latest
+        include:
+          - swift: '5.9'
+            os: macos-13
+          - swift: '6.0'
+            os: macos-latest
+          - swift: 6
+            os: macos-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: swift-actions/setup-swift@v2
         with:
