@@ -21,9 +21,9 @@ final class StitchMacrosTests: XCTestCase {
             struct SomeStruct {
                 var property: String = "test"
 
-                static var scope: StitchableScope = .application
+                @MainActor static var scope: StitchableScope = .application
 
-                static var dependency: SomeStruct  = createNewInstance()
+                @MainActor static var dependency: SomeStruct  = createNewInstance()
 
                 static func createNewInstance() -> SomeStruct  {
                     SomeStruct ()
@@ -50,9 +50,9 @@ final class StitchMacrosTests: XCTestCase {
             struct SomeStruct {
                 var property: String = "test"
 
-                static var scope: StitchableScope = .unique
+                @MainActor static var scope: StitchableScope = .unique
 
-                static var dependency: SomeStruct  = createNewInstance()
+                @MainActor static var dependency: SomeStruct  = createNewInstance()
 
                 static func createNewInstance() -> SomeStruct  {
                     SomeStruct ()
@@ -81,9 +81,9 @@ final class StitchMacrosTests: XCTestCase {
             struct SomeStruct {
                 var property: String = "test"
 
-                static var scope: StitchableScope = .application
+                @MainActor static var scope: StitchableScope = .application
 
-                static var dependency: any SomeProtocol = createNewInstance()
+                @MainActor static var dependency: any SomeProtocol = createNewInstance()
 
                 static func createNewInstance() -> any SomeProtocol {
                     SomeStruct ()
@@ -112,9 +112,9 @@ final class StitchMacrosTests: XCTestCase {
             struct SomeStruct {
                 var property: String = "test"
 
-                static var scope: StitchableScope = .cached
+                @MainActor static var scope: StitchableScope = .cached
 
-                static var dependency: SomeStruct  = createNewInstance()
+                @MainActor static var dependency: SomeStruct  = createNewInstance()
 
                 static func createNewInstance() -> SomeStruct  {
                     SomeStruct ()

@@ -28,8 +28,8 @@ public struct StitchifyMacro: MemberMacro, ExtensionMacro {
         let scoped = arguments?.first { $0.label?.text == "scoped" }?.expression ?? ".application"
         
         // add our dependency management properties and functionality
-        let scope: DeclSyntax = "static var scope: StitchableScope = \(raw: scoped)"
-        let dependency: DeclSyntax = "static var dependency: \(raw: key) = createNewInstance()"
+        let scope: DeclSyntax = "@MainActor static var scope: StitchableScope = \(raw: scoped)"
+        let dependency: DeclSyntax = "@MainActor static var dependency: \(raw: key) = createNewInstance()"
         let new: DeclSyntax = "static func createNewInstance() -> \(raw: key) { \(name)() }"
         
         return [scope, dependency, new]
