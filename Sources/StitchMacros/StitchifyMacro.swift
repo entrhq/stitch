@@ -18,6 +18,9 @@ public struct StitchifyMacro: MemberMacro, ExtensionMacro {
         guard let declared = declaration.asProtocol(NamedDeclSyntax.self) else { return [] }
         let name = declared.name
         
+        // Determine access level from the declaration
+        let accessLevel = extractAccessLevel(from: declaration)
+        
         // Extract args
         var arguments: LabeledExprListSyntax?
         if case .argumentList(let args) = node.arguments { arguments = args }
@@ -28,11 +31,26 @@ public struct StitchifyMacro: MemberMacro, ExtensionMacro {
         let scoped = arguments?.first { $0.label?.text == "scoped" }?.expression ?? ".application"
         
         // add our dependency management properties and functionality
-        let scope: DeclSyntax = "@MainActor static var scope: StitchableScope = \(raw: scoped)"
-        let dependency: DeclSyntax = "@MainActor static var dependency: \(raw: key) = createNewInstance()"
-        let new: DeclSyntax = "static func createNewInstance() -> \(raw: key) { \(name)() }"
+        let scope: DeclSyntax = "@MainActor \(raw: accessLevel)static var scope: StitchableScope = \(raw: scoped)"
+        let dependency: DeclSyntax = "@MainActor \(raw: accessLevel)static var dependency: \(raw: key) = createNewInstance()"
+        let new: DeclSyntax = "\(raw: accessLevel)static func createNewInstance() -> \(raw: key) { \(name)() }"
         
         return [scope, dependency, new]
+    }
+    
+    /// Extracts the access level modifier from a declaration's modifiers
+    private static func extractAccessLevel(from declaration: some DeclGroupSyntax) -> String {
+        let modifiers = declaration.modifiers
+        
+        return modifiers.first { modifier in
+            switch modifier.name.tokenKind {
+            case .keyword(.public), .keyword(.private), .keyword(.fileprivate), 
+                 .keyword(.internal), .keyword(.package):
+                return true
+            default:
+                return false
+            }
+        }.map { "\($0.name.text) " } ?? ""
     }
     
     // stitchable protocol conformance

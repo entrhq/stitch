@@ -42,7 +42,9 @@ struct Logger {
 }
 ```
 
-This dependency can now be resolved by the Stich propertyWrappers from anywhere in the codebase, using the dependencie's type for lookup.
+The `@Stitchify` macro respects your type's access level, automatically applying the same visibility to all generated members. This means `public` types create `public` dependencies, `private` types create `private` dependencies, and so on; enabling library authors to precisely control their API surface.
+
+This dependency can now be resolved by the Stich propertyWrappers from anywhere in the codebase, using the dependency's type for lookup.
 
 ```swift
 class Model {
@@ -103,12 +105,14 @@ protocol SomeNetworkAbstraction {
 }
 
 @Stitchify(by: SomeNetworkAbstraction.self)
-struct NetworkImplementation {
+public struct NetworkImplementation {
     ...
 }
 ```
 
 Simply add the `by:` property to the Stitchify macro and provide the protocol type you would like to key the dependency by. Now, when you access the dependency using any of Stitch's @propertyWrappers you will get the dependency by its abstraction, not its concrete type.
+
+**Access Control**: The macro automatically inherits your type's access level (public, internal, fileprivate, private, or package) and applies it to all generated dependency management members. In the example above, marking `NetworkImplementation` as `public` ensures the generated `scope`, `dependency`, and `createNewInstance()` members are also `public`, making them accessible across module boundaries.
 
 ```swift
 struct SomeInteractor {
