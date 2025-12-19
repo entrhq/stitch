@@ -8,12 +8,16 @@
 
 /// Macro that wraps a type as a `Stitchable`, to be used for injection.
 ///
-/// The `Stitchify` macro is used to convert a type into a `Stitchable`. It accepts optional parameters for the `type` and `scoped`.
-/// The `type` parameter specifies the keyed type to be stored against and to be referenced when resolving.
+/// The `Stitchify` macro is used to convert a type into a `Stitchable`. It accepts optional parameters for the `by` and `scoped`.
+/// The `by` parameter specifies the keyed type to be stored against and to be referenced when resolving.
 /// The `scoped` parameter specifies the `StitchableScope` of the stitchable representation.
 ///
+/// The macro automatically inherits the access level of the annotated type (public, internal, fileprivate, private, or package)
+/// and applies it to all generated members (`scope`, `dependency`, `createNewInstance()`), ensuring consistent visibility
+/// across your dependency injection setup.
+///
 /// - Parameters:
-///   - type: Optional type to be stitched by. When not provided, the type will be stitched against its concrete type.
+///   - by: Optional type to be stitched by. When not provided, the type will be stitched against its concrete type.
 ///   - scoped: The scope of the stitchable representation. Defaults to `.application`.
 @attached(member, names: named(scope), named(dependency), named(init), named(createNewInstance))
 @attached(extension, conformances: Stitchable)
