@@ -44,7 +44,7 @@ struct Logger {
 
 The `@Stitchify` macro respects your type's access level, automatically applying the same visibility to all generated members. This means `public` types create `public` dependencies, `private` types create `private` dependencies, and so on; enabling library authors to precisely control their API surface.
 
-This dependency can now be resolved by the Stich propertyWrappers from anywhere in the codebase, using the dependencie's type for lookup.
+This dependency can now be resolved by the Stich propertyWrappers from anywhere in the codebase, using the dependency's type for lookup.
 
 ```swift
 class Model {
