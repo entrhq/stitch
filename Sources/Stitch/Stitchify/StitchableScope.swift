@@ -1,22 +1,29 @@
+//  Copyright (c) 2026. entr, pty ltd
 //
-//  StitchableScope.swift
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
 //
+//  http://www.apache.org/licenses/LICENSE-2.0
 //
-//  Created by Justin Wilkin on 19/6/2023.
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 //
 
-public enum StitchableScope {
+public typealias ScopeContextKey = AnyHashable
+/// Sentinel type for the default dependency scope context
+public struct DefaultScopeContextKey: Hashable {}
+/// Default scope for dependencies keyed by context
+public let defaultScopeContextKey: ScopeContextKey = DefaultScopeContextKey()
+
+public enum StitchableScope: Equatable {
     /// Dependency scope that lasts the lifetime of the application
     case application
     /// Dependency scope that is recreated on each injection
     case unique
-}
-
-extension Stitchable {
-    public static func resolve() -> Dependency {
-        switch scope {
-        case .application: return dependency // always use the same instance
-        case .unique: return createNewInstance() // create a new instance every time
-        }
-    }
+    /// Dependency scope that is created per key and lasts for the lifetime of the application
+    case keyed
 }

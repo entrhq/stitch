@@ -17,15 +17,15 @@ final class StitchMacrosTests: XCTestCase {
             }
             """,
             expandedSource:"""
-            
+
             struct SomeStruct {
                 var property: String = "test"
 
                 @MainActor static var scope: StitchableScope = .application
 
-                @MainActor static var dependency: SomeStruct  = createNewInstance()
+                @MainActor static var instances: [ScopeContextKey: SomeStruct ] = [:]
 
-                static func createNewInstance() -> SomeStruct  {
+                @MainActor static var factories: DependencyFactories<SomeStruct > = DependencyFactories {
                     SomeStruct ()
                 }
             }
@@ -46,15 +46,15 @@ final class StitchMacrosTests: XCTestCase {
             }
             """,
             expandedSource: """
-            
+
             struct SomeStruct {
                 var property: String = "test"
 
                 @MainActor static var scope: StitchableScope = .unique
 
-                @MainActor static var dependency: SomeStruct  = createNewInstance()
+                @MainActor static var instances: [ScopeContextKey: SomeStruct ] = [:]
 
-                static func createNewInstance() -> SomeStruct  {
+                @MainActor static var factories: DependencyFactories<SomeStruct > = DependencyFactories {
                     SomeStruct ()
                 }
             }
@@ -83,9 +83,9 @@ final class StitchMacrosTests: XCTestCase {
 
                 @MainActor static var scope: StitchableScope = .application
 
-                @MainActor static var dependency: any SomeProtocol = createNewInstance()
+                @MainActor static var instances: [ScopeContextKey: any SomeProtocol] = [:]
 
-                static func createNewInstance() -> any SomeProtocol {
+                @MainActor static var factories: DependencyFactories<any SomeProtocol> = DependencyFactories {
                     SomeStruct ()
                 }
             }
@@ -102,7 +102,7 @@ final class StitchMacrosTests: XCTestCase {
             """
             protocol SomeProtocol {}
             
-            @Stitchify(type: SomeProtocol.self, scoped: .cached)
+            @Stitchify(by: SomeProtocol.self, scoped: .keyed)
             struct SomeStruct {
                 var property: String = "test"
             }
@@ -112,11 +112,11 @@ final class StitchMacrosTests: XCTestCase {
             struct SomeStruct {
                 var property: String = "test"
 
-                @MainActor static var scope: StitchableScope = .cached
+                @MainActor static var scope: StitchableScope = .keyed
 
-                @MainActor static var dependency: SomeStruct  = createNewInstance()
+                @MainActor static var instances: [ScopeContextKey: any SomeProtocol] = [:]
 
-                static func createNewInstance() -> SomeStruct  {
+                @MainActor static var factories: DependencyFactories<any SomeProtocol> = DependencyFactories {
                     SomeStruct ()
                 }
             }
@@ -137,15 +137,15 @@ final class StitchMacrosTests: XCTestCase {
             }
             """,
             expandedSource: """
-            
+
             public struct SomeStruct {
                 var property: String = "test"
 
                 @MainActor public static var scope: StitchableScope = .application
 
-                @MainActor public static var dependency: SomeStruct  = createNewInstance()
+                @MainActor public static var instances: [ScopeContextKey: SomeStruct ] = [:]
 
-                public static func createNewInstance() -> SomeStruct  {
+                @MainActor public static var factories: DependencyFactories<SomeStruct > = DependencyFactories {
                     SomeStruct ()
                 }
             }
@@ -174,9 +174,9 @@ final class StitchMacrosTests: XCTestCase {
 
                 @MainActor public static var scope: StitchableScope = .application
 
-                @MainActor public static var dependency: any SomeProtocol = createNewInstance()
+                @MainActor public static var instances: [ScopeContextKey: any SomeProtocol] = [:]
 
-                public static func createNewInstance() -> any SomeProtocol {
+                @MainActor public static var factories: DependencyFactories<any SomeProtocol> = DependencyFactories {
                     SomeClass ()
                 }
             }
@@ -197,15 +197,15 @@ final class StitchMacrosTests: XCTestCase {
             }
             """,
             expandedSource: """
-            
+
             private struct SomeStruct {
                 var property: String = "test"
 
                 @MainActor private static var scope: StitchableScope = .application
 
-                @MainActor private static var dependency: SomeStruct  = createNewInstance()
+                @MainActor private static var instances: [ScopeContextKey: SomeStruct ] = [:]
 
-                private static func createNewInstance() -> SomeStruct  {
+                @MainActor private static var factories: DependencyFactories<SomeStruct > = DependencyFactories {
                     SomeStruct ()
                 }
             }
@@ -226,15 +226,15 @@ final class StitchMacrosTests: XCTestCase {
             }
             """,
             expandedSource: """
-            
+
             fileprivate struct SomeStruct {
                 var property: String = "test"
 
                 @MainActor fileprivate static var scope: StitchableScope = .application
 
-                @MainActor fileprivate static var dependency: SomeStruct  = createNewInstance()
+                @MainActor fileprivate static var instances: [ScopeContextKey: SomeStruct ] = [:]
 
-                fileprivate static func createNewInstance() -> SomeStruct  {
+                @MainActor fileprivate static var factories: DependencyFactories<SomeStruct > = DependencyFactories {
                     SomeStruct ()
                 }
             }
@@ -255,15 +255,15 @@ final class StitchMacrosTests: XCTestCase {
             }
             """,
             expandedSource: """
-            
+
             package struct SomeStruct {
                 var property: String = "test"
 
                 @MainActor package static var scope: StitchableScope = .application
 
-                @MainActor package static var dependency: SomeStruct  = createNewInstance()
+                @MainActor package static var instances: [ScopeContextKey: SomeStruct ] = [:]
 
-                package static func createNewInstance() -> SomeStruct  {
+                @MainActor package static var factories: DependencyFactories<SomeStruct > = DependencyFactories {
                     SomeStruct ()
                 }
             }
@@ -284,15 +284,15 @@ final class StitchMacrosTests: XCTestCase {
             }
             """,
             expandedSource: """
-            
+
             public enum SomeEnum {
                 case value
 
                 @MainActor public static var scope: StitchableScope = .application
 
-                @MainActor public static var dependency: SomeEnum  = createNewInstance()
+                @MainActor public static var instances: [ScopeContextKey: SomeEnum ] = [:]
 
-                public static func createNewInstance() -> SomeEnum  {
+                @MainActor public static var factories: DependencyFactories<SomeEnum > = DependencyFactories {
                     SomeEnum ()
                 }
             }
@@ -313,20 +313,138 @@ final class StitchMacrosTests: XCTestCase {
             }
             """,
             expandedSource: """
-            
+
             public actor SomeActor {
                 init() {}
 
                 @MainActor public static var scope: StitchableScope = .application
 
-                @MainActor public static var dependency: SomeActor  = createNewInstance()
+                @MainActor public static var instances: [ScopeContextKey: SomeActor ] = [:]
 
-                public static func createNewInstance() -> SomeActor  {
+                @MainActor public static var factories: DependencyFactories<SomeActor > = DependencyFactories {
                     SomeActor ()
                 }
             }
 
             extension SomeActor : Stitchable {
+            }
+            """,
+            macros: testMacros
+        )
+    }
+
+    func testStitchifyExpandsWithKeyedScope() {
+        assertMacroExpansion(
+            """
+            @Stitchify(scoped: .keyed)
+            struct SomeStruct {
+                var property: String = "test"
+            }
+            """,
+            expandedSource: """
+
+            struct SomeStruct {
+                var property: String = "test"
+
+                @MainActor static var scope: StitchableScope = .keyed
+
+                @MainActor static var instances: [ScopeContextKey: SomeStruct ] = [:]
+
+                @MainActor static var factories: DependencyFactories<SomeStruct > = DependencyFactories {
+                    SomeStruct ()
+                }
+            }
+
+            extension SomeStruct : Stitchable {
+            }
+            """,
+            macros: testMacros
+        )
+    }
+    
+    func testStitchifyExpandsWithInternalAccessLevel() {
+        assertMacroExpansion(
+            """
+            @Stitchify
+            internal struct SomeStruct {
+                var property: String = "test"
+            }
+            """,
+            expandedSource: """
+
+            internal struct SomeStruct {
+                var property: String = "test"
+
+                @MainActor internal static var scope: StitchableScope = .application
+
+                @MainActor internal static var instances: [ScopeContextKey: SomeStruct ] = [:]
+
+                @MainActor internal static var factories: DependencyFactories<SomeStruct > = DependencyFactories {
+                    SomeStruct ()
+                }
+            }
+
+            extension SomeStruct : Stitchable {
+            }
+            """,
+            macros: testMacros
+        )
+    }
+    
+    func testStitchifyExpandsOnFinalClassWithoutAccessLevel() {
+        assertMacroExpansion(
+            """
+            @Stitchify
+            final class SomeClass {
+                init() {}
+            }
+            """,
+            expandedSource: """
+
+            final class SomeClass {
+                init() {}
+
+                @MainActor static var scope: StitchableScope = .application
+
+                @MainActor static var instances: [ScopeContextKey: SomeClass ] = [:]
+
+                @MainActor static var factories: DependencyFactories<SomeClass > = DependencyFactories {
+                    SomeClass ()
+                }
+            }
+
+            extension SomeClass : Stitchable {
+            }
+            """,
+            macros: testMacros
+        )
+    }
+    
+    func testStitchifyExpandsWithUniqueScopeAndProtocol() {
+        assertMacroExpansion(
+            """
+            protocol SomeProtocol {}
+            
+            @Stitchify(by: SomeProtocol.self, scoped: .unique)
+            public final class SomeClass: SomeProtocol {
+                init() {}
+            }
+            """,
+            expandedSource: """
+            protocol SomeProtocol {}
+            public final class SomeClass: SomeProtocol {
+                init() {}
+
+                @MainActor public static var scope: StitchableScope = .unique
+
+                @MainActor public static var instances: [ScopeContextKey: any SomeProtocol] = [:]
+
+                @MainActor public static var factories: DependencyFactories<any SomeProtocol> = DependencyFactories {
+                    SomeClass()
+                }
+            }
+
+            extension SomeClass: Stitchable {
             }
             """,
             macros: testMacros

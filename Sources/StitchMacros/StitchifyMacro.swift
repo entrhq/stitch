@@ -32,10 +32,10 @@ public struct StitchifyMacro: MemberMacro, ExtensionMacro {
         
         // add our dependency management properties and functionality
         let scope: DeclSyntax = "@MainActor \(raw: accessLevel)static var scope: StitchableScope = \(raw: scoped)"
-        let dependency: DeclSyntax = "@MainActor \(raw: accessLevel)static var dependency: \(raw: key) = createNewInstance()"
-        let new: DeclSyntax = "\(raw: accessLevel)static func createNewInstance() -> \(raw: key) { \(name)() }"
+        let instances: DeclSyntax = "@MainActor \(raw: accessLevel)static var instances: [ScopeContextKey: \(raw: key)] = [:]"
+        let factories: DeclSyntax = "@MainActor \(raw: accessLevel)static var factories: DependencyFactories<\(raw: key)> = DependencyFactories { \(raw: name)() }"
         
-        return [scope, dependency, new]
+        return [scope, instances, factories]
     }
     
     /// Extracts the access level modifier from a declaration's modifiers

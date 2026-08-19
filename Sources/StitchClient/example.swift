@@ -18,7 +18,7 @@ protocol SomeProtocol: Store {
     var property: String { get set }
 }
 
-@Stitchify(by: SomeProtocol.self, scoped: .application)
+@Stitchify(by: SomeProtocol.self, scoped: .keyed)
 class SomeStore: SomeProtocol {
     required init() {}
     var uuid = UUID()
