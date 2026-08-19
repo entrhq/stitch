@@ -57,6 +57,12 @@ public struct StitchObservable<Dependency: Stitchable>: DynamicProperty, Depende
         Wrapper(self)
     }
     
+    /// Creates the property wrapper for a stitched type
+    ///
+    /// - Parameters:
+    ///   - type: The `Stitchable` to resolve the dependency from.
+    ///   - key: The `ScopeContextKey` to resolve against. Only a `.keyed` scope reads the key,
+    ///   so leave it `nil` for any other scope.
     public init(_ type: (Dependency).Type, key: ScopeContextKey? = nil) {
         self.stitchedType = type
         self.scopeContextKey = key
