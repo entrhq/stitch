@@ -37,11 +37,12 @@ public struct StitchObservable<Dependency: Stitchable>: DynamicProperty, Depende
         }
     }
     
+    private let scopeContextKey: ScopeContextKey?
     private let stitchedType: (Dependency).Type
     public var wrappedValue: Dependency.Dependency {
-        get { stitchedType.resolve() }
+        get { stitchedType.resolve(key: scopeContextKey) }
         set {
-            stitchedType.register(dependency: newValue)
+            stitchedType.register(key: scopeContextKey) { newValue }
             observe()
         }
     }
@@ -56,8 +57,9 @@ public struct StitchObservable<Dependency: Stitchable>: DynamicProperty, Depende
         Wrapper(self)
     }
     
-    public init(_ type: (Dependency).Type) {
+    public init(_ type: (Dependency).Type, key: ScopeContextKey? = nil) {
         self.stitchedType = type
+        self.scopeContextKey = key
         observe()
     }
     

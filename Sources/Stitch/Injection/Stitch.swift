@@ -15,13 +15,15 @@
 @MainActor
 @propertyWrapper
 public struct Stitch<Dependency: Stitchable>: DependencyLifecycleScope {
+    private let scopeContextKey: ScopeContextKey?
     private let stitchedType: (Dependency).Type
     public var wrappedValue: Dependency.Dependency {
-        get { stitchedType.resolve() }
-        set { stitchedType.register(dependency: newValue) }
+        get { stitchedType.resolve(key: scopeContextKey) }
+        set { stitchedType.register(key: scopeContextKey) { newValue } }
     }
     
-    public init(_ type: (Dependency).Type) {
+    public init(_ type: (Dependency).Type, key: ScopeContextKey? = nil) {
         self.stitchedType = type
+        self.scopeContextKey = key
     }
 }

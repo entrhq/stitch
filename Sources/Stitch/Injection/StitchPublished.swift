@@ -21,12 +21,11 @@ public class StitchPublished<Dependency: Stitchable>: DependencyLifecycleScope {
     private var cancellable: AnyCancellable?
     private var publisher = Publisher<Dependency.Dependency>()
     
+    private let scopeContextKey: ScopeContextKey?
     private let stitchedType: (Dependency).Type
     public var wrappedValue: Dependency.Dependency {
-        get { stitchedType.resolve() }
-        set {
-            stitchedType.register(dependency: newValue)
-        }
+        get { stitchedType.resolve(key: scopeContextKey) }
+        set { stitchedType.register(key: scopeContextKey) { newValue } }
     }
     
     /// Projected value
@@ -57,9 +56,10 @@ public class StitchPublished<Dependency: Stitchable>: DependencyLifecycleScope {
         /// ensuring no mutation of previous subscriber instances.
         return Wrapper(self)
     }
-    
-    public init(_ type: (Dependency).Type) {
+
+    public init(_ type: (Dependency).Type, key: ScopeContextKey? = nil) {
         self.stitchedType = type
+        self.scopeContextKey = key
     }
     
     // MARK: Value observer wrapping
