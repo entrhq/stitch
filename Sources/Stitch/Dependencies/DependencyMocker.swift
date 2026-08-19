@@ -28,7 +28,7 @@ extension DependencyMocker {
         key: ScopeContextKey? = nil,
         mock: Dependency
     ) -> EmptyView {
-        stitchable.register { mock }
+        stitchable.register(key: key) { mock }
         // Returns an empty view for use inside a view scope
         return EmptyView()
     }
