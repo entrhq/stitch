@@ -4,7 +4,7 @@ import SwiftUI
 @testable import Stitch
 
 @MainActor
-final class StitchObservablePropertyWrapperTest: XCTestCase, DependencyRegistrant, DependencyMocker {
+final class StitchObservablePropertyWrapperTest: XCTestCase, DependencyMocker {
     private var disposables = Set<AnyCancellable>()
     @StitchObservable(TestObservableObject.self) var testObject: any SomeObservableTestProtocol
     
@@ -25,7 +25,7 @@ final class StitchObservablePropertyWrapperTest: XCTestCase, DependencyRegistran
     }
     
     func testObjectIsInjectedWithNewDependencyWhenProvidedAtRunTimeThroughRegisterAndKeypath() throws {
-        register(TestObservableObject.self, dependency: TestObservableObject())
+        TestObservableObject.register { TestObservableObject() }
         // Check that our property has been injected into the class with the appropriate value
         XCTAssertEqual(testObject.someObservableProperty, "test")
     }
@@ -38,7 +38,7 @@ final class StitchObservablePropertyWrapperTest: XCTestCase, DependencyRegistran
     }
     
     func testOtherObjectIsInjectedWhenProvidedAtRunTimeThroughRegisterAndKeypath() throws {
-        register(TestObservableObject.self, dependency: MockTestObservableObject())
+        TestObservableObject.register { MockTestObservableObject() }
         // Check that our property has been injected into the class with the appropriate value
         XCTAssertEqual(testObject.someObservableProperty, "mocked")
     }

@@ -4,7 +4,7 @@ import SwiftUI
 @testable import Stitch
 
 @MainActor
-final class StitchPublishedPropertyWrapperTests: XCTestCase, DependencyMocker, DependencyRegistrant {
+final class StitchPublishedPropertyWrapperTests: XCTestCase, DependencyMocker {
     private var disposables = Set<AnyCancellable>()
     @StitchPublished(TestObservableObject.self) var testObject
     
@@ -29,7 +29,7 @@ final class StitchPublishedPropertyWrapperTests: XCTestCase, DependencyMocker, D
     }
     
     func testObjectIsInjectedWithNewDependencyWhenProvidedAtRunTimeThroughRegisterAndKeypath() throws {
-        register(TestObservableObject.self, dependency: TestObservableObject())
+        TestObservableObject.register { TestObservableObject() }
         // Check that our property has been injected into the class with the appropriate value
         XCTAssertEqual(testObject.someObservableProperty, "test")
     }
@@ -42,7 +42,7 @@ final class StitchPublishedPropertyWrapperTests: XCTestCase, DependencyMocker, D
     }
     
     func testOtherObjectIsInjectedWhenProvidedAtRunTimeThroughRegisterAndKeypath() throws {
-        register(TestObservableObject.self, dependency: MockTestObservableObject())
+        TestObservableObject.register { MockTestObservableObject() }
         // Check that our property has been injected into the class with the appropriate value
         XCTAssertEqual(testObject.someObservableProperty, "mocked")
     }
@@ -56,7 +56,7 @@ final class StitchPublishedPropertyWrapperTests: XCTestCase, DependencyMocker, D
     }
     
     func testInjectedObservableObjectPublisherChangNewValue() {
-        register(TestObservableObject.self, dependency: MockTestObservableObject())
+        TestObservableObject.register { MockTestObservableObject() }
         XCTAssertEqual(testObject.someObservableProperty, "mocked")
         
         // Trigger a change

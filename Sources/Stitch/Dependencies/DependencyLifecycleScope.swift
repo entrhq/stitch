@@ -18,14 +18,16 @@ public protocol DependencyRegistrant {}
 public protocol DependencyResolver {}
 
 @MainActor
+@available(*, deprecated, message: "dependency registration has moved to macros. See @Stitchify")
 public extension DependencyRegistrant {
     /// Register a dependency to its dependency container
     func register<Dependency>(_ stitchable: any Stitchable<Dependency>.Type, dependency: Dependency) {
-        stitchable.register(dependency: dependency)
+        stitchable.register { dependency }
     }
 }
 
 @MainActor
+@available(*, deprecated, message: "dependency resolution has moved to macros. See @Stitchify")
 public extension DependencyResolver {
     /// Resolve a dependency from its dependency container
     func resolve<Dependency>(_ stitchable: any Stitchable<Dependency>.Type) -> Dependency {
