@@ -24,10 +24,10 @@ extension Stitchable {
     /// The new factory will be used by the `Stitchable` for any future instance recreations on the `defaultScopeContextKey`,
     public static func register(factory: @escaping DependencyFactories<Dependency>.Factory) {
         // we register the default scope when no scope is provided
-        self.factories[defaultScopeContextKey] = factory
+        factories[defaultScopeContextKey] = factory
         if case .unique = scope { return } // unique scoped dependencies do not store instances, they are held by callers
         // we greedily re-instantiate so that we do not serve a stale dependency
-        self.instances[defaultScopeContextKey] = factory()
+        instances[defaultScopeContextKey] = factory()
     }
     
     /// Registers a new factory for dependency instance creation against a given `ScopeContextKey` or defaults to `register(factory:)` if none provided

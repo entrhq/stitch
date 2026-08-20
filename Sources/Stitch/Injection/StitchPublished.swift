@@ -55,7 +55,7 @@ public class StitchPublished<Dependency: Stitchable>: DependencyLifecycleScope {
     public var projectedValue: Wrapper {
         // The `Wrapper` here subscribes our `ChangePublisher` to the single reference of `Publisher`
         // ensuring no mutation of previous subscriber instances.
-        return Wrapper(self)
+        Wrapper(self)
     }
 
     /// Creates the property wrapper for a stitched type
