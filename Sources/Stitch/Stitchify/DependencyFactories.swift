@@ -13,13 +13,23 @@
 //  limitations under the License.
 //
 
-@MainActor
-public protocol Stitchable<Dependency> {
-    associatedtype Dependency
+public struct DependencyFactories<Dependency> {
+    public typealias Factory = () -> Dependency
     
-    static var scope: StitchableScope { get }
-    static var instances: [ScopeContextKey: Dependency] { get set }
-    static var factories: DependencyFactories<Dependency> { get set }
+    private var defaultFactory: Factory
+    private var keyed: [ScopeContextKey: Factory] = [:]
     
-    init()
+    public init(_ defaultFactory: @escaping Factory) {
+        self.defaultFactory = defaultFactory
+    }
+    
+    subscript(key: ScopeContextKey) -> Factory {
+        get { keyed[key] ?? defaultFactory }
+        set {
+            keyed[key] = newValue
+            if key == defaultScopeContextKey {
+                defaultFactory = newValue
+            }
+        }
+    }
 }

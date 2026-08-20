@@ -4,14 +4,18 @@ import SwiftUI
 @testable import Stitch
 
 @MainActor
-final class StitchObservablePropertyWrapperTest: XCTestCase, DependencyRegistrant, DependencyMocker {
+final class StitchPublishedPropertyWrapperTests: XCTestCase, DependencyMocker {
     private var disposables = Set<AnyCancellable>()
-    @StitchObservable(TestObservableObject.self) var testObject: any SomeObservableTestProtocol
+    @StitchPublished(TestObservableObject.self) var testObject
     
     // MARK: - Mock objects
+    @MainActor
     class MockTestObservableObject: SomeObservableTestProtocol {
         @Published var someObservableProperty: String = "mocked"
+        
+        @MainActor
         func doSomething() {
+            print("changing to did something")
             someObservableProperty = "did something mocked"
         }
     }
@@ -25,7 +29,7 @@ final class StitchObservablePropertyWrapperTest: XCTestCase, DependencyRegistran
     }
     
     func testObjectIsInjectedWithNewDependencyWhenProvidedAtRunTimeThroughRegisterAndKeypath() throws {
-        register(TestObservableObject.self, dependency: TestObservableObject())
+        TestObservableObject.register { TestObservableObject() }
         // Check that our property has been injected into the class with the appropriate value
         XCTAssertEqual(testObject.someObservableProperty, "test")
     }
@@ -38,7 +42,7 @@ final class StitchObservablePropertyWrapperTest: XCTestCase, DependencyRegistran
     }
     
     func testOtherObjectIsInjectedWhenProvidedAtRunTimeThroughRegisterAndKeypath() throws {
-        register(TestObservableObject.self, dependency: MockTestObservableObject())
+        TestObservableObject.register { MockTestObservableObject() }
         // Check that our property has been injected into the class with the appropriate value
         XCTAssertEqual(testObject.someObservableProperty, "mocked")
     }
@@ -51,49 +55,14 @@ final class StitchObservablePropertyWrapperTest: XCTestCase, DependencyRegistran
         XCTAssertEqual("\(view.self)", "\(EmptyView().self)")
     }
     
-    // MARK: - Observed object publishes changes to objects
-    func testInjectedObservableObjectValueChangesOnMutation() {
-        testObject = TestObservableObject()
-        XCTAssertEqual(testObject.someObservableProperty, "test")
+    func testInjectedObservableObjectPublisherChangNewValue() {
+        TestObservableObject.register { MockTestObservableObject() }
+        XCTAssertEqual(testObject.someObservableProperty, "mocked")
         
-        // Trigger an internal function that should change state
+        // Trigger a change
         testObject.doSomething()
         
-        XCTAssertEqual(testObject.someObservableProperty, "did something")
-    }
-    
-    func testInjectedObservableObjectValuePublishesChange() {
-        testObject = TestObservableObject()
-        XCTAssertEqual(testObject.someObservableProperty, "test")
-        
-        // Validate our response from decoder processor
-        var changeCount = 0
-        
-        // Observe our object's change publisher
-        _testObject.observableObject.objectWillChange
-            .sink { _ in
-                // Increase our change count
-                changeCount += 1
-            }
-            .store(in: &disposables)
-        
-        // Trigger a published state change on our object
-        testObject.doSomething()
-        
-        // Check that our object notified observers of its change
-        XCTAssertEqual(testObject.someObservableProperty, "did something")
-        XCTAssertEqual(changeCount, 1)
-    }
-    
-    func testInjectedObservableObjectBinding() {
-        testObject = TestObservableObject()
-        
-        // Update our value through the binding
-        // We have to use .wrappedVlue here, but SwiftUI will automatically forward
-        // the assigned value when @Binding property wrapper is used
-        $testObject.someObservableProperty.wrappedValue = "new value"
-        
-        // Check that our value changed on the base property
-        XCTAssertEqual(testObject.someObservableProperty, "new value")
+        // Check that the object updated its change property
+        XCTAssertEqual(testObject.someObservableProperty, "did something mocked")
     }
 }

@@ -112,7 +112,7 @@ public struct NetworkImplementation {
 
 Simply add the `by:` property to the Stitchify macro and provide the protocol type you would like to key the dependency by. Now, when you access the dependency using any of Stitch's @propertyWrappers you will get the dependency by its abstraction, not its concrete type.
 
-**Access Control**: The macro automatically inherits your type's access level (public, internal, fileprivate, private, or package) and applies it to all generated dependency management members. In the example above, marking `NetworkImplementation` as `public` ensures the generated `scope`, `dependency`, and `createNewInstance()` members are also `public`, making them accessible across module boundaries.
+**Access Control**: The macro automatically inherits your type's access level (public, internal, fileprivate, private, or package) and applies it to all generated dependency management members. In the example above, marking `NetworkImplementation` as `public` ensures the generated `scope`, `instances`, and `factories` members are also `public`, making them accessible across module boundaries.
 
 ```swift
 struct SomeInteractor {

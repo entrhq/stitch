@@ -17,7 +17,7 @@ import SwiftUI
 // MARK: - Dependency mocking
 @MainActor
 public protocol DependencyMocker {
-    func mockInViewScope<Dependency>(_ stitchable: any Stitchable<Dependency>.Type, mock: Dependency) -> EmptyView
+    func mockInViewScope<Dependency>(_ stitchable: any Stitchable<Dependency>.Type, key: ScopeContextKey?, mock: Dependency) -> EmptyView
 }
 
 @MainActor
@@ -25,9 +25,10 @@ extension DependencyMocker {
     // MARK: Mock inside ViewBuilder and View bodies
     public func mockInViewScope<Dependency>(
         _ stitchable: any Stitchable<Dependency>.Type,
+        key: ScopeContextKey? = nil,
         mock: Dependency
     ) -> EmptyView {
-        stitchable.register(dependency: mock)
+        stitchable.register(key: key) { mock }
         // Returns an empty view for use inside a view scope
         return EmptyView()
     }
