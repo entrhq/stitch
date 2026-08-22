@@ -14,8 +14,7 @@ final class StitchPublishedProjectedValueTests: XCTestCase {
     private var disposables = Set<AnyCancellable>()
     @StitchPublished(PartiallyPublishedObject.self) var testObject
 
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
         PartiallyPublishedObject.register { PartiallyPublishedObject() }
         _ = testObject.objectWillChange
     }
