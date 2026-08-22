@@ -13,6 +13,7 @@ public struct StitchifyMacro: MemberMacro, ExtensionMacro {
     public static func expansion(
         of node: AttributeSyntax,
         providingMembersOf declaration: some DeclGroupSyntax,
+        conformingTo protocols: [TypeSyntax],
         in context: some MacroExpansionContext
     ) throws -> [DeclSyntax] {
         guard let declared = declaration.asProtocol(NamedDeclSyntax.self) else { return [] }
