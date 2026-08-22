@@ -215,7 +215,7 @@ This hides our model's implementation detail successfully, and looks as if it wi
 
 Stitch introduces a new property wrapper `@StitchObservable` as a way to inject this dependency by its protocol type into a SwiftUI view, and still leverage its @Published property state updates for view recomposition.
 
-To do this, simply add the `AnyObservableObject` conformance to your already conforming `ObservableObject`, provide an entry to the `DependencyMap` as demonstrated above, and replace the `@ObservedObject` wrapper with `@StitchObservable`
+To do this, simply add the `AnyObservableObject` conformance to your already conforming `ObservableObject`, stitchify it as demonstrated above, and replace the `@ObservedObject` wrapper with `@StitchObservable`
 
 ```swift
 protocol Modelling: ObservableObject, AnyObservableObject {
