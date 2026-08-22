@@ -17,7 +17,7 @@ public typealias ScopeContextKey = AnyHashable
 /// Sentinel type for the default dependency scope context
 public struct DefaultScopeContextKey: Hashable {}
 /// Default scope for dependencies keyed by context
-public let defaultScopeContextKey: ScopeContextKey = DefaultScopeContextKey()
+public var defaultScopeContextKey: ScopeContextKey { DefaultScopeContextKey() }
 
 public enum StitchableScope: Equatable {
     /// Dependency scope that lasts the lifetime of the application

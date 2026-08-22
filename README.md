@@ -1,5 +1,5 @@
 # ![](Images/StitchLogo.png)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Compatibility](https://img.shields.io/badge/Swift%20compatibility-5.9%2B-green)]() [![Compatibility](https://img.shields.io/badge/iOS-13%2B-orange)]() [![Compatibility](https://img.shields.io/badge/Mac%20OS-10.15%2B-orange)]()
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Compatibility](https://img.shields.io/badge/Swift%20compatibility-6.0%2B-green)]() [![Compatibility](https://img.shields.io/badge/iOS-13%2B-orange)]() [![Compatibility](https://img.shields.io/badge/Mac%20OS-10.15%2B-orange)]()
 
 # Stitch
 A lightweight, SwiftUI inspired, compile time safe dependency injection (DI) 
