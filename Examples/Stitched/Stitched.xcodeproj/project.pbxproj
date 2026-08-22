@@ -277,7 +277,7 @@
 			);
 			mainGroup = D045208229E3A225005AB753;
 			packageReferences = (
-				D04520B829E3A29B005AB753 /* XCRemoteSwiftPackageReference "stitch" */,
+				D04520B829E3A29B005AB753 /* XCLocalSwiftPackageReference "../.." */,
 			);
 			productRefGroup = D045208C29E3A225005AB753 /* Products */;
 			projectDirPath = "";
@@ -646,21 +646,16 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		D04520B829E3A29B005AB753 /* XCRemoteSwiftPackageReference "stitch" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/entrhq/stitch";
-			requirement = {
-				branch = "feature/5.9-macros";
-				kind = branch;
-			};
+/* Begin XCLocalSwiftPackageReference section */
+		D04520B829E3A29B005AB753 /* XCLocalSwiftPackageReference "../.." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../..;
 		};
-/* End XCRemoteSwiftPackageReference section */
+/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		D04520B929E3A29B005AB753 /* Stitch */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = D04520B829E3A29B005AB753 /* XCRemoteSwiftPackageReference "stitch" */;
 			productName = Stitch;
 		};
 /* End XCSwiftPackageProductDependency section */
