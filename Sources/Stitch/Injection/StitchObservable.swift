@@ -17,7 +17,7 @@ import Combine
 
 @MainActor
 @propertyWrapper
-public struct StitchObservable<Dependency: Stitchable>: DynamicProperty, DependencyLifecycleScope {
+public struct StitchObservable<Dependency: Stitchable>: DynamicProperty {
     @MainActor
     @dynamicMemberLookup
     public struct Wrapper {
