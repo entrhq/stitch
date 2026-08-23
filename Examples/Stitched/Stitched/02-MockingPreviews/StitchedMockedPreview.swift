@@ -26,7 +26,7 @@ struct StitchedMockedPreview: PreviewProvider {
     static var previews: some View {
         StitchedView()
             .onAppear {
-                SewingStore.register(dependency: MockSewingStore())
+                SewingStore.register { MockSewingStore() }
             }
     }
 }

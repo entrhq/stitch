@@ -17,7 +17,7 @@ import Combine
 
 @MainActor
 @propertyWrapper
-public class StitchPublished<Dependency: Stitchable>: DependencyLifecycleScope {
+public class StitchPublished<Dependency: Stitchable> {
     private var cancellable: AnyCancellable?
     private var publisher = Publisher<Dependency.Dependency>()
     

@@ -1,7 +1,9 @@
 name: Build Swift Package
 
-on: 
+on:
   push:
+    branches: [main]
+  pull_request:
 
 jobs: 
   build-test-stitch:
@@ -18,7 +20,7 @@ jobs:
       - name: Verify Swift swift-version
         run: swift --version
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Build
         run: swift build

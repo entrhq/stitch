@@ -14,7 +14,7 @@
 
 @MainActor
 @propertyWrapper
-public struct Stitch<Dependency: Stitchable>: DependencyLifecycleScope {
+public struct Stitch<Dependency: Stitchable> {
     private let scopeContextKey: ScopeContextKey?
     private let stitchedType: (Dependency).Type
     public var wrappedValue: Dependency.Dependency {
