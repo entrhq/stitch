@@ -17,15 +17,15 @@ import Combine
 
 @MainActor
 @propertyWrapper
-public class StitchPublished<Dependency: Stitchable> {
+public class StitchPublished<Value> {
     private var cancellable: AnyCancellable?
-    private var publisher = Publisher<Dependency.Dependency>()
+    private var publisher = Publisher<Value>()
     
-    private let scopeContextKey: ScopeContextKey?
-    private let stitchedType: (Dependency).Type
-    public var wrappedValue: Dependency.Dependency {
-        get { stitchedType.resolve(key: scopeContextKey) }
-        set { stitchedType.register(key: scopeContextKey) { newValue } }
+    private let resolve: () -> Value
+    private let register: (Value) -> Void
+    public var wrappedValue: Value {
+        get { resolve() }
+        set { register(newValue) }
     }
     
     /// Projected value
@@ -60,15 +60,14 @@ public class StitchPublished<Dependency: Stitchable> {
 
     /// Creates the property wrapper for a stitched type
     ///
-    /// - Parameters:
-    ///   - type: The `Stitchable` to resolve the dependency from.
-    ///   - key: The `ScopeContextKey` to resolve against. Only a `.keyed` scope reads the key,
-    ///   so leave it `nil` for any other scope.
-    public init(_ type: (Dependency).Type, key: ScopeContextKey? = nil) {
-        self.stitchedType = type
-        self.scopeContextKey = key
+    /// - Parameter type: The `Stitchable` to resolve the dependency from.
+    public init<Dependency: Stitchable>(
+        _ type: (Dependency).Type
+    ) where Dependency.Dependency == Value {
+        self.resolve = { type.resolve() }
+        self.register = { value in type.register { value } }
     }
-    
+        
     // MARK: Value observer wrapping
     /// Generic typed wrapper for `ObservableObjects` erased as `AnyObservableObjects`.
     ///
@@ -80,23 +79,23 @@ public class StitchPublished<Dependency: Stitchable> {
     public struct Wrapper {
         private var wrapped: StitchPublished
         
-        internal init(_ wrap: StitchPublished<Dependency>) {
+        internal init(_ wrap: StitchPublished<Value>) {
             self.wrapped = wrap
         }
         
         /// Fetches the published wrapper attached to the given property
-        private func getPublishedWrapper<Object, Value: Equatable>(
+        private func getPublishedWrapper<Object, Property: Equatable>(
             of object: Object,
-            for keyPath: KeyPath<Object, Value>
-        ) -> Combine.Published<Value>? {
+            for keyPath: KeyPath<Object, Property>
+        ) -> Combine.Published<Property>? {
             // Use Mirror to reflect the object
             let mirror = Mirror(reflecting: object)
-            let keyValue = object[keyPath: keyPath] as Value?
+            let keyValue = object[keyPath: keyPath] as Property?
 
             // Iterate through the children to find publishers
             for child in mirror.children {
                 // filter by Combine published types only
-                guard let pw = child.value as? Combine.Published<Value> else { continue }
+                guard let pw = child.value as? Combine.Published<Property> else { continue }
                 
                 // check current value of publisher is equal to keyPath value
                 if getPublishedValue(from: pw) == keyValue {
@@ -107,9 +106,9 @@ public class StitchPublished<Dependency: Stitchable> {
         }
         
         /// Traverses the publisher object to get the underlying current value
-        private func getPublishedValue<Value>(from published: Combine.Published<Value>) -> Value? {
+        private func getPublishedValue<Property>(from published: Combine.Published<Property>) -> Property? {
             let publishedMirror = Mirror(reflecting: published)
-            let traverseValue: Value? = MirrorTraverser(mirror: publishedMirror)
+            let traverseValue: Property? = MirrorTraverser(mirror: publishedMirror)
                 .traverse(by: "storage")?
                 .traverse(by: "publisher")
                 .traverse(by: "subject")
@@ -120,7 +119,7 @@ public class StitchPublished<Dependency: Stitchable> {
         }
         
         public subscript<Subject: Equatable>(
-            dynamicMember keyPath: ReferenceWritableKeyPath<Dependency.Dependency, Subject>
+            dynamicMember keyPath: ReferenceWritableKeyPath<Value, Subject>
         ) -> Publisher<Subject> {
             var published = getPublishedWrapper(of: self.wrapped.wrappedValue, for: keyPath)
             return ChangePublisher(rootPublisher: published?.projectedValue).publisher

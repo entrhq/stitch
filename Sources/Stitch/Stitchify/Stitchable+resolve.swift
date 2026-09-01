@@ -14,20 +14,19 @@
 //
 
 extension Stitchable {
-    public static func resolve(key: ScopeContextKey? = nil) -> Dependency {
+    public static func resolve() -> Dependency {
         switch scope {
-        case .application: return createOrFetchInstance(for: defaultScopeContextKey) // always use the default instance and ignore any key
-        case .unique: return factories[defaultScopeContextKey]() // create a new instance every time
-        case .keyed: return createOrFetchInstance(for: key ?? defaultScopeContextKey) // retrieves instance or creates a new one for the context
+        case .application: return createOrFetchInstance() // always use the same instance
+        case .unique: return factory() // create a new instance every time
         }
     }
     
-    static func createOrFetchInstance(for key: ScopeContextKey) -> Dependency {
-        // dependency already exists in instances so reuse
-        if let instance = instances[key] { return instance }
+    static func createOrFetchInstance() -> Dependency {
+        // dependency already exists so reuse
+        if let instance { return instance }
         // otherwise create a new dependency and save for recall
-        let new = factories[key]()
-        instances[key] = new
+        let new = factory()
+        instance = new
         return new
     }
 }

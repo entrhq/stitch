@@ -17,18 +17,18 @@ import Combine
 
 @MainActor
 @propertyWrapper
-public struct StitchObservable<Dependency: Stitchable>: DynamicProperty {
+public struct StitchObservable<Value>: DynamicProperty {
     @MainActor
     @dynamicMemberLookup
     public struct Wrapper {
         private var wrapped: StitchObservable
         
-        internal init(_ wrap: StitchObservable<Dependency>) {
+        internal init(_ wrap: StitchObservable<Value>) {
             self.wrapped = wrap
         }
         
         public subscript<Subject>(
-            dynamicMember keyPath: ReferenceWritableKeyPath<Dependency.Dependency, Subject>
+            dynamicMember keyPath: ReferenceWritableKeyPath<Value, Subject>
         ) -> Binding<Subject> {
             Binding(
                 get: { self.wrapped.wrappedValue[keyPath: keyPath] },
@@ -37,12 +37,12 @@ public struct StitchObservable<Dependency: Stitchable>: DynamicProperty {
         }
     }
     
-    private let scopeContextKey: ScopeContextKey?
-    private let stitchedType: (Dependency).Type
-    public var wrappedValue: Dependency.Dependency {
-        get { stitchedType.resolve(key: scopeContextKey) }
+    private let resolve: () -> Value
+    private let register: (Value) -> Void
+    public var wrappedValue: Value {
+        get { resolve() }
         set {
-            stitchedType.register(key: scopeContextKey) { newValue }
+            register(newValue)
             observe()
         }
     }
@@ -59,16 +59,15 @@ public struct StitchObservable<Dependency: Stitchable>: DynamicProperty {
     
     /// Creates the property wrapper for a stitched type
     ///
-    /// - Parameters:
-    ///   - type: The `Stitchable` to resolve the dependency from.
-    ///   - key: The `ScopeContextKey` to resolve against. Only a `.keyed` scope reads the key,
-    ///   so leave it `nil` for any other scope.
-    public init(_ type: (Dependency).Type, key: ScopeContextKey? = nil) {
-        self.stitchedType = type
-        self.scopeContextKey = key
+    /// - Parameter type: The `Stitchable` to resolve the dependency from.
+    public init<Dependency: Stitchable>(
+        _ type: (Dependency).Type
+    ) where Dependency.Dependency == Value {
+        self.resolve = { type.resolve() }
+        self.register = { value in type.register { value } }
         observe()
     }
-    
+        
     private mutating func observe() {
         let observable = wrappedValue as? (any AnyObservableObject)
         

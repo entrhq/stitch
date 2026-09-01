@@ -15,11 +15,10 @@
 
 @MainActor
 public protocol Stitchable<Dependency> {
+    typealias DependencyFactory = () -> Dependency
     associatedtype Dependency
     
     static var scope: StitchableScope { get }
-    static var instances: [ScopeContextKey: Dependency] { get set }
-    static var factories: DependencyFactories<Dependency> { get set }
-    
-    init()
+    static var instance: Dependency? { get set }
+    static var factory: DependencyFactory { get set }
 }

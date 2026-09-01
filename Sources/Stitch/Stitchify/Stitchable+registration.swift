@@ -14,28 +14,17 @@
 //
 
 extension Stitchable {
-    @available(*, deprecated, message: "Use `register(factory:)` or `register(key:factory:)` instead")
+    @available(*, deprecated, message: "Use `register(factory:)` instead")
     public static func register(dependency: Dependency) {
         register { dependency }
     }
     
-    /// Registers a new factory for the default dependency instance creation
+    /// Registers a new factory for dependency instance creation
     ///
-    /// The new factory will be used by the `Stitchable` for any future instance recreations on the `defaultScopeContextKey`,
-    public static func register(factory: @escaping DependencyFactories<Dependency>.Factory) {
-        // we register the default scope when no scope is provided
-        factories[defaultScopeContextKey] = factory
-        if case .unique = scope { return } // unique scoped dependencies do not store instances, they are held by callers
-        // we greedily re-instantiate so that we do not serve a stale dependency
-        instances[defaultScopeContextKey] = factory()
-    }
-    
-    /// Registers a new factory for dependency instance creation against a given `ScopeContextKey` or defaults to `register(factory:)` if none provided
-    public static func register(key: ScopeContextKey? = nil, factory: @escaping DependencyFactories<Dependency>.Factory) {
-        // try to set a factory for a scope on an application or unique scope is a no-op, fall back to default registration
-        guard case .keyed = scope, let scopeKey = key else { return register(factory: factory) }
-        factories[scopeKey] = factory
-        // greedily re-instantiate after we created a new factory so we do not serve a stale dependency
-        instances[scopeKey] = factory()
+    /// The new factory will be used by the `Stitchable` for any future instance recreations.
+    public static func register(factory: @escaping DependencyFactory) {
+        self.factory = factory
+        guard case .application = scope else { return } // unique scoped dependencies are held by callers
+        self.instance = factory()
     }
 }

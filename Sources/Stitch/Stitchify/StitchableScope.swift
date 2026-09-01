@@ -13,17 +13,9 @@
 //  limitations under the License.
 //
 
-public typealias ScopeContextKey = AnyHashable
-/// Sentinel type for the default dependency scope context
-public struct DefaultScopeContextKey: Hashable {}
-/// Default scope for dependencies keyed by context
-public var defaultScopeContextKey: ScopeContextKey { DefaultScopeContextKey() }
-
 public enum StitchableScope: Equatable {
     /// Dependency scope that lasts the lifetime of the application
     case application
     /// Dependency scope that is recreated on each injection
     case unique
-    /// Dependency scope that is created per key and lasts for the lifetime of the application
-    case keyed
 }

@@ -32,11 +32,12 @@ public struct StitchifyMacro: MemberMacro, ExtensionMacro {
         let scoped = arguments?.first { $0.label?.text == "scoped" }?.expression ?? ".application"
         
         // add our dependency management properties and functionality
+        let dependency: DeclSyntax = "\(raw: accessLevel)typealias Dependency = \(raw: key)"
         let scope: DeclSyntax = "@MainActor \(raw: accessLevel)static var scope: StitchableScope = \(raw: scoped)"
-        let instances: DeclSyntax = "@MainActor \(raw: accessLevel)static var instances: [ScopeContextKey: \(raw: key)] = [:]"
-        let factories: DeclSyntax = "@MainActor \(raw: accessLevel)static var factories: DependencyFactories<\(raw: key)> = DependencyFactories { \(raw: name)() }"
+        let instance: DeclSyntax = "@MainActor \(raw: accessLevel)static var instance: (\(raw: key))? = nil"
+        let factory: DeclSyntax = "@MainActor \(raw: accessLevel)static var factory: DependencyFactory = { \(name)() }"
         
-        return [scope, instances, factories]
+        return [dependency, scope, instance, factory]
     }
     
     /// Extracts the access level modifier from a declaration's modifiers

@@ -12,13 +12,12 @@ import Foundation
 protocol Store: ObservableObject, AnyObservableObject {}
 
 // MARK: SAME
-@MainActor
 protocol SomeProtocol: Store {
     var uuid: UUID { get }
     var property: String { get set }
 }
 
-@Stitchify(by: SomeProtocol.self, scoped: .keyed)
+@Stitchify(by: SomeProtocol.self, scoped: .application)
 class SomeStore: SomeProtocol {
     required init() {}
     var uuid = UUID()
@@ -27,20 +26,7 @@ class SomeStore: SomeProtocol {
 }
 
 @MainActor
-struct SomeStruct {
-    @Stitch(SomeStore.self) var new
-    @StitchObservable(SomeStore.self) var newObservable
-    
-    func doSomething() {
-        print(new.property)
-        print(newObservable.uuid)
-    }
-}
-
-@MainActor
-class AnotherClass {
-    @Stitch(SomeStore.self) var new
-    @StitchObservable(SomeStore.self) var newObservable
+class SomeClass {
     @StitchPublished(SomeStore.self) var newPublished
     var cancellables: Set<AnyCancellable> = []
     
@@ -62,9 +48,12 @@ class AnotherClass {
 
 @main
 struct Main {
-    @MainActor
     static func main() {
-        SomeStruct().doSomething()
-        AnotherClass().doSomething()
+        let cls = SomeClass()
+        // invoke once
+        cls.doSomething()
+        // invoke same instance
+        cls.doSomething()
     }
 }
+

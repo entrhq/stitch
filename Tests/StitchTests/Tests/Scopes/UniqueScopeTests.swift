@@ -32,18 +32,11 @@ final class UniqueScopeTests: XCTestCase {
         XCTAssertNotEqual(first.id, second.id)
     }
 
-    func testResolveDoesNotCacheInstances() {
+    func testResolveDoesNotStoreTheInstance() {
         _ = UniqueScopedObject.resolve()
 
         // Check that no instance was stored
-        XCTAssertTrue(UniqueScopedObject.instances.isEmpty)
-    }
-
-    func testResolveIgnoresAContextKey() {
-        let first = UniqueScopedObject.resolve(key: "a")
-        let second = UniqueScopedObject.resolve(key: "a")
-
-        XCTAssertNotEqual(first.id, second.id)
+        XCTAssertNil(UniqueScopedObject.instance)
     }
 
     // MARK: - Registration
@@ -62,7 +55,7 @@ final class UniqueScopeTests: XCTestCase {
         UniqueScopedFactoryObject.register { MockCountedObject() }
 
         // Check that registration did not store an instance
-        XCTAssertTrue(UniqueScopedFactoryObject.instances.isEmpty)
+        XCTAssertNil(UniqueScopedFactoryObject.instance)
     }
 
     func testRegisteringAnInstancePinsEveryResolve() {

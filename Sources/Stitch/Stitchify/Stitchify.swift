@@ -20,12 +20,12 @@
 /// The `scoped` parameter specifies the `StitchableScope` of the stitchable representation.
 ///
 /// The macro automatically inherits the access level of the annotated type (public, internal, fileprivate, private, or package)
-/// and applies it to all generated members (`scope`, `instances`, `factories`), ensuring consistent visibility
+/// and applies it to all generated members (`scope`, `instance`, `factory`), ensuring consistent visibility
 /// across your dependency injection setup.
 ///
 /// - Parameters:
 ///   - by: Optional type to be stitched by. When not provided, the type will be stitched against its concrete type.
 ///   - scoped: The scope of the stitchable representation. Defaults to `.application`.
-@attached(member, names: named(scope), named(instances), named(factories), named(init))
+@attached(member, names: named(Dependency), named(scope), named(instance), named(factory))
 @attached(extension, conformances: Stitchable)
 public macro Stitchify(by: Any.Type? = nil, scoped: StitchableScope = .application) = #externalMacro(module: "StitchMacros", type: "StitchifyMacro")
