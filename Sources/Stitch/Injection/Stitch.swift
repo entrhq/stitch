@@ -31,4 +31,15 @@ public struct Stitch<Value> {
         self.resolve = { type.resolve() }
         self.register = { value in type.register { value } }
     }
+    
+    /// Creates the property wrapper for a binding declared in a `StitchValues` extension
+    ///
+    /// - Parameter keyPath: The accessor generated for the binding.
+    public init(_ keyPath: WritableKeyPath<StitchValues, Value>) {
+        self.resolve = { StitchValues()[keyPath: keyPath] }
+        self.register = { value in
+            var values = StitchValues()
+            values[keyPath: keyPath] = value
+        }
     }
+}

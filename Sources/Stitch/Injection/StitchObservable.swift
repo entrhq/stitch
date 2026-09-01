@@ -67,7 +67,19 @@ public struct StitchObservable<Value>: DynamicProperty {
         self.register = { value in type.register { value } }
         observe()
     }
-        
+    
+    /// Creates the property wrapper for a binding declared in a `StitchValues` extension
+    ///
+    /// - Parameter keyPath: The accessor generated for the binding.
+    public init(_ keyPath: WritableKeyPath<StitchValues, Value>) {
+        self.resolve = { StitchValues()[keyPath: keyPath] }
+        self.register = { value in
+            var values = StitchValues()
+            values[keyPath: keyPath] = value
+        }
+        observe()
+    }
+    
     private mutating func observe() {
         let observable = wrappedValue as? (any AnyObservableObject)
         

@@ -16,5 +16,7 @@ import SwiftCompilerPlugin
 struct StitchMacrosPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
         StitchifyMacro.self,
+        StitchModuleMacro.self,
+        StitchBindingMacro.self,
     ]
 }

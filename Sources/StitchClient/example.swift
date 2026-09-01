@@ -17,9 +17,7 @@ protocol SomeProtocol: Store {
     var property: String { get set }
 }
 
-@Stitchify(by: SomeProtocol.self, scoped: .application)
 class SomeStore: SomeProtocol {
-    required init() {}
     var uuid = UUID()
     @Published var property: String = "hello"
     @Published var otherProperty: String = "not visible by protocol"
@@ -27,7 +25,7 @@ class SomeStore: SomeProtocol {
 
 @MainActor
 class SomeClass {
-    @StitchPublished(SomeStore.self) var newPublished
+    @StitchPublished(\.someStore) var newPublished
     var cancellables: Set<AnyCancellable> = []
     
     func doSomething() {
@@ -57,3 +55,8 @@ struct Main {
     }
 }
 
+@StitchModule
+extension StitchValues {
+    @StitchBinding(SomeProtocol.self)
+    typealias SomeStoreBinding = SomeStore
+}
