@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		D01C54F42D3E64240072704F /* SewingInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C54F22D3E64240072704F /* SewingInteractor.swift */; };
+		D01C55412D3E64240072704F /* SewingFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C55402D3E64240072704F /* SewingFormatting.swift */; };
+		D01C55432D3E64240072704F /* SewingBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C55422D3E64240072704F /* SewingBindings.swift */; };
+		D01C55452D3E64240072704F /* StitchedWithBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01C55442D3E64240072704F /* StitchedWithBindings.swift */; };
 		D045208F29E3A225005AB753 /* StitchedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D045208E29E3A225005AB753 /* StitchedApp.swift */; };
 		D045209129E3A225005AB753 /* StitchedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D045209029E3A225005AB753 /* StitchedView.swift */; };
 		D045209329E3A227005AB753 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D045209229E3A227005AB753 /* Assets.xcassets */; };
@@ -44,6 +47,9 @@
 
 /* Begin PBXFileReference section */
 		D01C54F22D3E64240072704F /* SewingInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SewingInteractor.swift; sourceTree = "<group>"; };
+		D01C55402D3E64240072704F /* SewingFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SewingFormatting.swift; sourceTree = "<group>"; };
+		D01C55422D3E64240072704F /* SewingBindings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SewingBindings.swift; sourceTree = "<group>"; };
+		D01C55442D3E64240072704F /* StitchedWithBindings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StitchedWithBindings.swift; sourceTree = "<group>"; };
 		D045208B29E3A225005AB753 /* Stitched.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stitched.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D045208E29E3A225005AB753 /* StitchedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StitchedApp.swift; sourceTree = "<group>"; };
 		D045209029E3A225005AB753 /* StitchedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StitchedView.swift; sourceTree = "<group>"; };
@@ -89,6 +95,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D01C55462D3E64240072704F /* 05-Bindings */ = {
+			isa = PBXGroup;
+			children = (
+				D01C55402D3E64240072704F /* SewingFormatting.swift */,
+				D01C55422D3E64240072704F /* SewingBindings.swift */,
+				D01C55442D3E64240072704F /* StitchedWithBindings.swift */,
+			);
+			path = "05-Bindings";
+			sourceTree = "<group>";
+		};
 		D01C54F32D3E64240072704F /* 04-Scoped */ = {
 			isa = PBXGroup;
 			children = (
@@ -126,6 +142,7 @@
 				D04520C729E3B08D005AB753 /* 02-MockingPreviews */,
 				D04520CA29E3B1AA005AB753 /* 03-StitchPublished */,
 				D01C54F32D3E64240072704F /* 04-Scoped */,
+				D01C55462D3E64240072704F /* 05-Bindings */,
 				D045208E29E3A225005AB753 /* StitchedApp.swift */,
 				D045209229E3A227005AB753 /* Assets.xcassets */,
 			);
@@ -331,6 +348,9 @@
 				D04520C429E3A6F7005AB753 /* SewingRepository.swift in Sources */,
 				D04520D029E3B56E005AB753 /* StitchedWithAlert.swift in Sources */,
 				D01C54F42D3E64240072704F /* SewingInteractor.swift in Sources */,
+				D01C55412D3E64240072704F /* SewingFormatting.swift in Sources */,
+				D01C55432D3E64240072704F /* SewingBindings.swift in Sources */,
+				D01C55452D3E64240072704F /* StitchedWithBindings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
